@@ -59,7 +59,7 @@ export function OtpInput({
   }
 
   return (
-    <div className="flex justify-between gap-2" role="group" aria-label={ariaLabel}>
+    <div className="grid grid-cols-6 gap-1.5 sm:gap-2" role="group" aria-label={ariaLabel}>
       {digits.map((d, i) => (
         <input
           key={i}
@@ -75,7 +75,7 @@ export function OtpInput({
           onKeyDown={(e) => handleKeyDown(i, e)}
           onPaste={handlePaste}
           className={cn(
-            "h-14 w-12 rounded-lg border-2 border-input bg-background text-center text-2xl font-bold",
+            "h-12 w-full min-w-0 rounded-lg border-2 border-input bg-background text-center text-xl font-bold sm:h-14 sm:text-2xl",
             "focus-visible:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           )}
         />

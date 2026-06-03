@@ -39,8 +39,8 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
   }
 
   return (
-    <Card className="w-full max-w-[420px] p-8">
-      <div className="mb-6 text-center">
+    <Card className="w-full max-w-[420px] p-5 sm:p-8">
+      <div className="mb-5 text-center sm:mb-6">
         <span className="mx-auto grid size-12 place-items-center rounded-xl bg-primary text-2xl font-extrabold text-primary-foreground">
           R
         </span>
@@ -80,7 +80,7 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
         )}
 
         <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? "…" : t("submit")}
+          {loading ? "..." : t("submit")}
         </Button>
       </form>
 
@@ -95,7 +95,7 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
         </>
       )}
 
-      <div className="mt-6 flex items-center justify-between text-sm">
+      <div className="mt-6 flex flex-col gap-3 text-center text-sm sm:flex-row sm:items-center sm:justify-between sm:text-left">
         <Link href="/forgot-password" className="text-muted-foreground hover:underline">
           {t("forgot")}
         </Link>

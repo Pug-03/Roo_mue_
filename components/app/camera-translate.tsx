@@ -163,7 +163,7 @@ export function CameraTranslate({
       </Card>
 
       {/* Right: real-time recognition (40%) */}
-      <Card className="flex flex-col gap-4 p-5">
+      <Card className="flex flex-col gap-4 p-4 sm:p-5">
         {status === "ready" && (
           <p className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
             <span className="size-2 animate-pulse rounded-full bg-primary" aria-hidden />
@@ -182,7 +182,7 @@ export function CameraTranslate({
           {liveTop ? (
             <>
               <div className="flex items-baseline justify-between gap-2">
-                <span className="text-3xl font-extrabold">{liveTop.text}</span>
+                <span className="text-2xl font-extrabold sm:text-3xl">{liveTop.text}</span>
                 <span className="text-sm tabular-nums text-muted-foreground">
                   {Math.round(liveTop.confidence * 100)}%
                 </span>
@@ -220,7 +220,7 @@ export function CameraTranslate({
                     onClick={() => setSelectedIdx(i)}
                     aria-pressed={active}
                     className={cn(
-                      "w-full rounded-lg border-2 p-3 text-left text-lg font-semibold transition-colors",
+                      "w-full rounded-lg border-2 p-3 text-left text-base font-semibold transition-colors sm:text-lg",
                       active ? "border-primary bg-primary/5" : "border-border hover:border-primary/40"
                     )}
                   >
@@ -242,7 +242,7 @@ export function CameraTranslate({
 
         <FaceAnalyticsBar signals={face} />
 
-        <div className="mt-auto grid grid-cols-2 gap-2">
+        <div className="mt-auto grid gap-2 sm:grid-cols-2">
           <Button
             variant="outline"
             onClick={() => say(chosenText)}
@@ -281,7 +281,7 @@ export function CameraTranslate({
       {/* Permission gate overlay: camera never opens without explicit confirm */}
       {gateOpen && (
         <div className="absolute inset-0 z-20 grid place-items-center rounded-xl bg-black/55 p-4">
-          <Card className="w-full max-w-md p-6">
+          <Card className="w-full max-w-md p-5 sm:p-6">
             <div className="mb-3 flex items-center gap-2">
               <Icons.camera className="size-6 text-primary" aria-hidden />
               <h2 className="text-lg font-bold">{t("permissionTitle")}</h2>
@@ -292,7 +292,7 @@ export function CameraTranslate({
                 {insecure ? t("insecure") : t("denied")}
               </p>
             )}
-            <div className="mt-6 flex gap-3">
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
               <Button variant="outline" className="flex-1" onClick={onClose}>
                 {t("cancel")}
               </Button>

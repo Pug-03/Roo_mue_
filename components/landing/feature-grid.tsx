@@ -21,10 +21,10 @@ export async function FeatureGrid() {
   const t = await getTranslations("landing.features");
 
   return (
-    <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
+    <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
       {FEATURES.map(({ key, Icon }) => (
         <li key={key}>
-          <Card className="h-full p-5 transition-shadow hover:shadow-md">
+          <Card className="h-full p-4 transition-shadow hover:shadow-md sm:p-5">
             <Icon className="size-6 text-primary" aria-hidden />
             <h3 className="mt-3 text-base font-bold leading-tight">
               {t(`${key}.title`)}

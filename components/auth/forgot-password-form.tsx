@@ -88,7 +88,7 @@ export function ForgotPasswordForm() {
   }
 
   return (
-    <Card className="w-full max-w-[420px] p-8">
+    <Card className="w-full max-w-[420px] p-5 sm:p-8">
       <h1 className="text-center text-2xl font-extrabold">{t("title")}</h1>
 
       {step === 1 && (
@@ -106,7 +106,7 @@ export function ForgotPasswordForm() {
           </div>
           {error && <FieldError>{error}</FieldError>}
           <Button className="w-full" onClick={sendCode} disabled={loading}>
-            {loading ? "…" : t("send")}
+            {loading ? "..." : t("send")}
             <Icons.next className="size-5" aria-hidden />
           </Button>
         </div>
@@ -159,7 +159,7 @@ export function ForgotPasswordForm() {
             )}
           </div>
 
-          <div className="flex gap-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             <Button variant="outline" className="flex-1" onClick={() => setStep(1)}>
               <Icons.back className="size-5" aria-hidden />
               {t("back")}
@@ -170,7 +170,7 @@ export function ForgotPasswordForm() {
               disabled={loading || otp.length !== 6}
             >
               <Icons.confirm className="size-5" aria-hidden />
-              {loading ? "…" : t("submit")}
+              {loading ? "..." : t("submit")}
             </Button>
           </div>
         </div>

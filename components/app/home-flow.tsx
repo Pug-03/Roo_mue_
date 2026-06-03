@@ -39,7 +39,7 @@ const CATEGORIES: { key: CategoryKey; Icon: LucideIcon }[] = [
 function BackBar({ onBack }: { onBack: () => void }) {
   const t = useTranslations("app");
   return (
-    <Button variant="ghost" size="sm" className="mb-4" onClick={onBack}>
+    <Button variant="ghost" size="sm" className="mb-4 px-2 sm:px-4" onClick={onBack}>
       <Icons.back className="size-5" aria-hidden />
       {t("back")}
     </Button>
@@ -179,8 +179,8 @@ export function HomeFlow() {
   // ---- Context selection (Step A) ----
   return (
     <div className="mx-auto max-w-3xl">
-      <div className="mb-6 text-center">
-        <h1 className="text-2xl font-extrabold">{t("context.title")}</h1>
+      <div className="mb-5 text-center sm:mb-6">
+        <h1 className="text-xl font-extrabold sm:text-2xl">{t("context.title")}</h1>
         <p className="mt-1 text-muted-foreground">{t("context.subtitle")}</p>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
@@ -220,7 +220,7 @@ function ContextCard({
     <button type="button" onClick={onClick} className="text-left">
       <Card
         className={cn(
-          "flex h-full flex-col items-center gap-3 border-2 p-8 text-center transition-all hover:shadow-md",
+          "flex h-full flex-col items-center gap-3 border-2 p-5 text-center transition-all hover:shadow-md sm:p-8",
           accent === "red"
             ? "border-destructive/30 hover:border-destructive"
             : "border-primary/30 hover:border-primary"
@@ -236,7 +236,7 @@ function ContextCard({
         >
           <Icon className="size-8" aria-hidden />
         </span>
-        <span className="text-xl font-extrabold">{title}</span>
+        <span className="text-lg font-extrabold sm:text-xl">{title}</span>
         <span className="text-sm text-muted-foreground">{desc}</span>
       </Card>
     </button>
@@ -260,7 +260,7 @@ function ActionCard({
     <button type="button" onClick={onClick} className="text-left">
       <Card
         className={cn(
-          "flex h-full flex-col items-center gap-2 border-2 p-6 text-center transition-all hover:shadow-md",
+          "flex h-full flex-col items-center gap-2 border-2 p-4 text-center transition-all hover:shadow-md sm:p-6",
           accent === "red"
             ? "border-destructive/30 hover:border-destructive"
             : "border-primary/30 hover:border-primary"

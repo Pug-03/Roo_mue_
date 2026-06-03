@@ -143,8 +143,8 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
   }
 
   return (
-    <Card className="w-full max-w-[440px] p-8">
-      <div className="mb-6 text-center">
+    <Card className="w-full max-w-[440px] p-5 sm:p-8">
+      <div className="mb-5 text-center sm:mb-6">
         <h1 className="text-2xl font-extrabold">{t("title")}</h1>
         <div className="mt-4">
           <StepDots current={step} total={3} />
@@ -182,7 +182,7 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
           <h2 className="text-center text-sm font-semibold text-muted-foreground">
             {t("step2.heading")}
           </h2>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             <div className="space-y-1.5">
               <Label htmlFor="firstName">{t("step2.firstName")}</Label>
               <Input
@@ -239,13 +239,13 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
             <p className="text-xs text-muted-foreground">{t("step2.passwordHint")}</p>
           </div>
           {error && <FieldError>{error}</FieldError>}
-          <div className="flex gap-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             <Button variant="outline" className="flex-1" onClick={() => setStep(1)}>
               <Icons.back className="size-5" aria-hidden />
               {t("step2.back")}
             </Button>
             <Button className="flex-1" onClick={goStep2ToStep3} disabled={loading}>
-              {loading ? "…" : t("step2.next")}
+              {loading ? "..." : t("step2.next")}
               <Icons.next className="size-5" aria-hidden />
             </Button>
           </div>
@@ -290,7 +290,7 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
             )}
           </div>
 
-          <div className="flex gap-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             <Button variant="outline" className="flex-1" onClick={() => setStep(2)}>
               <Icons.back className="size-5" aria-hidden />
               {t("step3.back")}
@@ -301,7 +301,7 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
               disabled={loading || otp.length !== 6}
             >
               <Icons.confirm className="size-5" aria-hidden />
-              {loading ? "…" : t("step3.submit")}
+              {loading ? "..." : t("step3.submit")}
             </Button>
           </div>
         </div>

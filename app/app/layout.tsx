@@ -20,20 +20,23 @@ export default async function AppLayout({
   return (
     <div className="flex min-h-dvh flex-col bg-secondary/20">
       <header className="border-b bg-background">
-        <div className="container flex h-16 items-center justify-between gap-4">
-          <Link href="/app" className="text-xl font-extrabold tracking-tight">
+        <div className="container flex min-h-16 items-center justify-between gap-3 py-3">
+          <Link
+            href="/app"
+            className="min-w-0 text-lg font-extrabold tracking-tight sm:text-xl"
+          >
             Roo_mue
           </Link>
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <LanguageToggle />
             <SignOutButton label={t("signOut")} />
           </div>
         </div>
-        <div className="container pb-3">
+        <div className="pb-3 sm:container">
           <AppNav />
         </div>
       </header>
-      <main className="container flex-1 py-8">{children}</main>
+      <main className="container flex-1 py-5 sm:py-8">{children}</main>
     </div>
   );
 }

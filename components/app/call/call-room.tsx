@@ -105,7 +105,7 @@ export function CallRoom({
         />
       )}
 
-      <div className="flex justify-center gap-3">
+      <div className="grid gap-3 sm:flex sm:justify-center">
         <Button variant="outline" onClick={toggleMic}>
           {micOn ? (
             <Icons.micOn className="size-5" aria-hidden />
@@ -196,12 +196,12 @@ function SignerView({
         </div>
       </Card>
 
-      <Card className="flex flex-col gap-4 p-5">
+      <Card className="flex flex-col gap-4 p-4 sm:p-5">
         {/* Father's speech, large, for the child to read */}
         <div className="rounded-xl border-2 border-primary/30 bg-primary/5 p-4">
           <p className="text-xs font-medium text-muted-foreground">{t("theirSpeech")}</p>
           <p
-            className={`mt-1 text-2xl font-extrabold leading-snug ${incoming?.interim ? "opacity-60" : ""}`}
+            className={`mt-1 text-xl font-extrabold leading-snug sm:text-2xl ${incoming?.interim ? "opacity-60" : ""}`}
           >
             {incoming?.text || "—"}
           </p>
@@ -241,7 +241,7 @@ function SpeakerView({
   return (
     <div className="mx-auto max-w-2xl space-y-4">
       {/* Child's signs, large, read aloud automatically */}
-      <Card className="border-2 border-primary/30 bg-primary/5 p-6">
+      <Card className="border-2 border-primary/30 bg-primary/5 p-4 sm:p-6">
         <div className="flex items-center justify-between">
           <p className="text-xs font-medium text-muted-foreground">{t("theirSigns")}</p>
           {incoming && (
@@ -250,12 +250,12 @@ function SpeakerView({
             </Button>
           )}
         </div>
-        <p className="mt-2 text-3xl font-extrabold leading-snug">
+        <p className="mt-2 text-2xl font-extrabold leading-snug sm:text-3xl">
           {incoming?.text || t("raiseHand")}
         </p>
       </Card>
 
-      <Card className="p-5">
+      <Card className="p-4 sm:p-5">
         <p className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
           <Icons.micOn className="size-4" aria-hidden />
           {t("listening")}

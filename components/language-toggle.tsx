@@ -41,7 +41,7 @@ export function LanguageToggle({ className }: { className?: string }) {
       role="group"
       aria-label={t("languageToggleLabel")}
     >
-      <Icons.language className="ml-2 size-4 text-muted-foreground" aria-hidden />
+      <Icons.language className="ml-1 size-4 text-muted-foreground sm:ml-2" aria-hidden />
       {locales.map((loc) => {
         const isActive = loc === active;
         return (
@@ -52,13 +52,14 @@ export function LanguageToggle({ className }: { className?: string }) {
             disabled={isPending}
             aria-pressed={isActive}
             className={cn(
-              "min-h-9 rounded-full px-3 text-sm font-semibold transition-colors disabled:opacity-60",
+              "min-h-9 rounded-full px-2.5 text-sm font-semibold transition-colors disabled:opacity-60 sm:px-3",
               isActive
                 ? "bg-primary text-primary-foreground"
                 : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
             )}
           >
-            {label[loc]}
+            <span className="sm:hidden">{loc.toUpperCase()}</span>
+            <span className="hidden sm:inline">{label[loc]}</span>
           </button>
         );
       })}

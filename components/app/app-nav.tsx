@@ -24,8 +24,11 @@ export function AppNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex justify-center" aria-label="Primary">
-      <div className="inline-flex items-center gap-1 rounded-full border bg-card p-1">
+    <nav
+      className="overflow-x-auto px-4 [-ms-overflow-style:none] [scrollbar-width:none] sm:flex sm:justify-center sm:px-0 [&::-webkit-scrollbar]:hidden"
+      aria-label="Primary"
+    >
+      <div className="inline-flex min-w-max items-center gap-1 rounded-full border bg-card p-1">
         {TABS.map(({ href, key, Icon }) => {
           const active = href === "/app" ? pathname === "/app" : pathname.startsWith(href);
           return (
@@ -34,7 +37,7 @@ export function AppNav() {
               href={href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "inline-flex min-h-11 items-center gap-2 rounded-full px-5 text-sm font-semibold transition-colors",
+                "inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 text-sm font-semibold transition-colors sm:gap-2 sm:px-5",
                 active
                   ? "bg-primary text-primary-foreground"
                   : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"

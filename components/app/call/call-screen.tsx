@@ -102,8 +102,8 @@ export function CallScreen() {
       </div>
 
       {/* Room */}
-      <Card className="mt-5 p-5">
-        <div className="mb-4 inline-flex rounded-lg border p-1">
+      <Card className="mt-5 p-4 sm:p-5">
+        <div className="mb-4 grid grid-cols-2 rounded-lg border p-1 sm:inline-flex">
           <TabBtn active={roomMode === "create"} onClick={() => setRoomMode("create")}>
             {t("createRoom")}
           </TabBtn>
@@ -115,8 +115,8 @@ export function CallScreen() {
         {roomMode === "create" ? (
           <div className="space-y-2">
             <p className="text-sm text-muted-foreground">{t("shareHint")}</p>
-            <div className="flex items-center gap-2">
-              <span className="flex-1 rounded-lg bg-secondary px-4 py-3 text-center font-mono text-2xl font-bold tracking-[0.3em]">
+            <div className="grid gap-2 sm:flex sm:items-center">
+              <span className="min-w-0 flex-1 rounded-lg bg-secondary px-3 py-3 text-center font-mono text-xl font-bold tracking-[0.2em] sm:px-4 sm:text-2xl sm:tracking-[0.3em]">
                 {createdCode}
               </span>
               <Button
@@ -222,7 +222,7 @@ function TabBtn({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "min-h-9 rounded-md px-4 text-sm font-semibold transition-colors",
+        "min-h-9 rounded-md px-3 text-sm font-semibold transition-colors sm:px-4",
         active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-accent"
       )}
     >
