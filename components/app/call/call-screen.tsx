@@ -48,11 +48,14 @@ export function CallScreen() {
 
     setBusy(true);
     try {
-      const constraints: MediaStreamConstraints =
-        role === "signer"
-          ? { video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } }, audio: true }
-          : { audio: true };
-      const media = await navigator.mediaDevices.getUserMedia(constraints);
+      const media = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: "user",
+          width: { ideal: 640 },
+          height: { ideal: 480 },
+        },
+        audio: true,
+      });
       setStream(media);
       setRoom(code);
     } catch {

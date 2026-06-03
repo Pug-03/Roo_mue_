@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -30,11 +30,6 @@ export function CallRoom({
   const locale = useLocale() as "th" | "en";
   const { say } = useSpeak(locale);
 
-  const audioStream = useMemo(
-    () => new MediaStream(stream.getAudioTracks()),
-    [stream]
-  );
-
   const [incoming, setIncoming] = useState<{ text: string; interim: boolean } | null>(null);
   const [sent, setSent] = useState<string[]>([]);
   const [micOn, setMicOn] = useState(true);
@@ -53,7 +48,7 @@ export function CallRoom({
   const { state, remoteStream, sendCaption } = useCall({
     room,
     peerId,
-    localStream: audioStream,
+    localStream: stream,
     enabled: true,
     onCaption,
   });
@@ -92,9 +87,12 @@ export function CallRoom({
           }}
           incoming={incoming}
           sent={sent}
+          remoteStream={remoteStream}
         />
       ) : (
         <SpeakerView
+          localStream={stream}
+          remoteStream={remoteStream}
           locale={locale}
           onSpeech={(text, isFinal) => {
             sendCaption({ kind: "speech", text, final: isFinal });
@@ -150,11 +148,13 @@ function SignerView({
   onCommit,
   incoming,
   sent,
+  remoteStream,
 }: {
   stream: MediaStream;
   onCommit: (word: string) => void;
   incoming: { text: string; interim: boolean } | null;
   sent: string[];
+  remoteStream: MediaStream | null;
 }) {
   const t = useTranslations("app.call");
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -197,6 +197,8 @@ function SignerView({
       </Card>
 
       <Card className="flex flex-col gap-4 p-4 sm:p-5">
+        <VideoTile stream={remoteStream} label={t("speaker")} />
+
         {/* Father's speech, large, for the child to read */}
         <div className="rounded-xl border-2 border-primary/30 bg-primary/5 p-4">
           <p className="text-xs font-medium text-muted-foreground">{t("theirSpeech")}</p>
@@ -221,11 +223,15 @@ function SignerView({
 // ---- Speaker (hearing) view ------------------------------------------------
 
 function SpeakerView({
+  localStream,
+  remoteStream,
   locale,
   onSpeech,
   incoming,
   onPlayIncoming,
 }: {
+  localStream: MediaStream;
+  remoteStream: MediaStream | null;
   locale: "th" | "en";
   onSpeech: (text: string, isFinal: boolean) => void;
   incoming: { text: string; interim: boolean } | null;
@@ -239,7 +245,12 @@ function SpeakerView({
   });
 
   return (
-    <div className="mx-auto max-w-2xl space-y-4">
+    <div className="space-y-4">
+      <div className="grid gap-4 lg:grid-cols-[6fr_4fr]">
+        <VideoTile stream={remoteStream} label={t("signer")} />
+        <VideoTile stream={localStream} label={t("speaker")} muted mirror />
+      </div>
+
       {/* Child's signs, large, read aloud automatically */}
       <Card className="border-2 border-primary/30 bg-primary/5 p-4 sm:p-6">
         <div className="flex items-center justify-between">
@@ -268,5 +279,51 @@ function SpeakerView({
         )}
       </Card>
     </div>
+  );
+}
+
+function VideoTile({
+  stream,
+  label,
+  muted = true,
+  mirror = false,
+}: {
+  stream: MediaStream | null;
+  label: string;
+  muted?: boolean;
+  mirror?: boolean;
+}) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.srcObject = stream;
+    if (stream) video.play().catch(() => {});
+  }, [stream]);
+
+  return (
+    <Card className="overflow-hidden p-0">
+      <div className="relative aspect-video w-full bg-black">
+        {stream ? (
+          <video
+            ref={videoRef}
+            playsInline
+            muted={muted}
+            className={`absolute inset-0 size-full object-cover ${mirror ? "-scale-x-100" : ""}`}
+          />
+        ) : (
+          <div className="absolute inset-0 grid place-items-center px-4 text-center text-sm text-white/75">
+            <span className="inline-flex items-center gap-2">
+              <span className="size-2 animate-pulse rounded-full bg-current" aria-hidden />
+              {label}
+            </span>
+          </div>
+        )}
+        <div className="absolute left-3 top-3 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white">
+          {label}
+        </div>
+      </div>
+    </Card>
   );
 }
