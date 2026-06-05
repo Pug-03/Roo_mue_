@@ -1,15 +1,13 @@
 import * as React from "react";
-import { Hand } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
  * Roo_mue brand assets.
  *
- * `BrandMark` is the app icon: a soft blue→cyan gradient squircle with a top
- * sheen, hairline ring and colored shadow, holding a clean open-hand line icon
- * (the sign-language / รู้มือ "know-hand" motif). `Logo` pairs it with the
- * wordmark. Sizing is driven entirely by the `size-*` class passed in, so the
- * mark stays crisp from a 32px header chip up to the hero.
+ * `BrandMark` is the app icon — the official Roo_mue logo image, rendered as a
+ * rounded squircle. `Logo` pairs it with the wordmark. Sizing is driven
+ * entirely by the `size-*` class passed in, so the mark stays crisp from a
+ * 32px header chip up to the hero.
  */
 
 const markSizes = {
@@ -28,22 +26,16 @@ type Size = keyof typeof markSizes;
 
 export function BrandMark({ className }: { className?: string }) {
   return (
-    <span
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src="/brand/roomue-logo.png"
+      alt=""
       aria-hidden
       className={cn(
-        "relative grid shrink-0 place-items-center overflow-hidden rounded-[28%]",
-        "bg-gradient-to-br from-blue-500 via-blue-600 to-cyan-500",
-        "shadow-lg shadow-blue-600/25 ring-1 ring-inset ring-white/25",
+        "shrink-0 rounded-[24%] object-cover shadow-md",
         className
       )}
-    >
-      {/* top sheen for a soft, glossy feel */}
-      <span className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/30 to-transparent" />
-      <Hand
-        className="relative size-[56%] text-white drop-shadow-sm"
-        strokeWidth={2}
-      />
-    </span>
+    />
   );
 }
 

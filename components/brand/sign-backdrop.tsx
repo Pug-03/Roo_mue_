@@ -6,32 +6,34 @@ import { cn } from "@/lib/utils";
 /**
  * Decorative, non-interactive backdrop for the landing and auth pages.
  *
- * A soft blue→cyan gradient wash with two blurred color blobs, overlaid with a
- * sparse, delicate line-art pattern of sign-language hand gestures. The hands
- * are thin-stroked at low opacity and masked so they melt away toward the
- * edges — present enough to carry the theme, quiet enough to never compete with
- * foreground content. Purely cosmetic: aria-hidden + pointer-events-none.
+ * A sparse, delicate line-art pattern of sign-language hand gestures clustered
+ * near the top of the page (the hero), drifting slowly. The background itself
+ * is left neutral/white so it never tints the sponsor logos below. Hands are
+ * thin-stroked at low opacity and masked so they melt away before reaching the
+ * content lower down. Purely cosmetic: aria-hidden + pointer-events-none.
  */
 
 type Placed = {
   Icon: LucideIcon;
   left: string;
-  top: string;
+  top: string; // relative to the top decorative band
   size: number;
   rotate: number;
   opacity: number;
+  duration: number; // seconds — slow, gradual drift
+  delay: number;
 };
 
-// Mix of gestures so it reads as "signing", hand-tuned for an organic scatter.
+// Mix of gestures, weighted toward the top, hand-tuned for an organic scatter.
 const HANDS: Placed[] = [
-  { Icon: Hand, left: "4%", top: "14%", size: 132, rotate: -14, opacity: 0.16 },
-  { Icon: Grab, left: "20%", top: "60%", size: 96, rotate: 10, opacity: 0.12 },
-  { Icon: HandMetal, left: "38%", top: "24%", size: 84, rotate: -6, opacity: 0.1 },
-  { Icon: Hand, left: "55%", top: "70%", size: 120, rotate: 16, opacity: 0.13 },
-  { Icon: HandMetal, left: "70%", top: "12%", size: 92, rotate: -20, opacity: 0.12 },
-  { Icon: Hand, left: "85%", top: "46%", size: 150, rotate: 8, opacity: 0.16 },
-  { Icon: Grab, left: "90%", top: "82%", size: 80, rotate: -12, opacity: 0.1 },
-  { Icon: Hand, left: "12%", top: "86%", size: 100, rotate: 22, opacity: 0.11 },
+  { Icon: Hand, left: "7%", top: "14%", size: 150, rotate: -14, opacity: 0.16, duration: 17, delay: 0 },
+  { Icon: HandMetal, left: "23%", top: "6%", size: 96, rotate: 10, opacity: 0.12, duration: 21, delay: 2.5 },
+  { Icon: Grab, left: "39%", top: "26%", size: 84, rotate: -6, opacity: 0.1, duration: 24, delay: 1 },
+  { Icon: Hand, left: "57%", top: "9%", size: 122, rotate: 14, opacity: 0.14, duration: 19, delay: 3.5 },
+  { Icon: HandMetal, left: "73%", top: "24%", size: 100, rotate: -20, opacity: 0.12, duration: 22, delay: 1.5 },
+  { Icon: Hand, left: "91%", top: "13%", size: 150, rotate: 8, opacity: 0.15, duration: 18, delay: 0.8 },
+  { Icon: Grab, left: "15%", top: "42%", size: 80, rotate: 22, opacity: 0.1, duration: 23, delay: 2 },
+  { Icon: HandMetal, left: "85%", top: "44%", size: 92, rotate: 12, opacity: 0.1, duration: 20, delay: 4 },
 ];
 
 export function SignBackdrop({ className }: { className?: string }) {
@@ -43,23 +45,28 @@ export function SignBackdrop({ className }: { className?: string }) {
         className
       )}
     >
-      {/* base wash */}
-      <div className="absolute inset-0 bg-gradient-to-b from-secondary/50 via-background to-background" />
-
-      {/* soft color blobs for depth */}
-      <div className="absolute -left-32 -top-28 size-[30rem] rounded-full bg-blue-500/15 blur-3xl" />
-      <div className="absolute -right-24 top-1/4 size-[26rem] rounded-full bg-cyan-400/15 blur-3xl" />
-      <div className="absolute -bottom-32 left-1/3 size-[28rem] rounded-full bg-primary/10 blur-3xl" />
-
-      {/* sparse hand-gesture line art, faded toward the edges */}
-      <div className="absolute inset-0 text-primary [mask-image:radial-gradient(125%_95%_at_50%_28%,black,transparent_76%)]">
-        {HANDS.map(({ Icon, left, top, size, rotate, opacity }, i) => (
-          <Icon
+      {/* Hands only — clustered near the top, masked to fade before the content
+          below, slowly drifting. No color wash so logos stay on clean white. */}
+      <div className="absolute inset-x-0 top-0 h-[85vh] text-primary [mask-image:radial-gradient(125%_100%_at_50%_16%,black,transparent_72%)]">
+        {HANDS.map(({ Icon, left, top, size, rotate, opacity, duration, delay }, i) => (
+          <span
             key={i}
             className="absolute -translate-x-1/2 -translate-y-1/2"
-            style={{ left, top, width: size, height: size, rotate: `${rotate}deg`, opacity }}
-            strokeWidth={1.1}
-          />
+            style={{ left, top }}
+          >
+            <Icon
+              className="sign-hand block"
+              style={{
+                width: size,
+                height: size,
+                opacity,
+                rotate: `${rotate}deg`,
+                animationDuration: `${duration}s`,
+                animationDelay: `${delay}s`,
+              }}
+              strokeWidth={1.1}
+            />
+          </span>
         ))}
       </div>
     </div>

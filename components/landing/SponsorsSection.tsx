@@ -127,7 +127,7 @@ function TierLabel({ children }: { children: React.ReactNode }) {
 
 export function SponsorsSection() {
   return (
-    <section className="bg-white py-16 sm:py-24">
+    <section className="py-16 sm:py-24">
       <div className="container space-y-24">
         {/* 1 ── Organized by ───────────────────────────────────────────── */}
         <div>

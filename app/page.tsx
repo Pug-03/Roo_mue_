@@ -13,8 +13,15 @@ export default function LandingPage() {
         <SponsorsSection />
       </main>
       <footer className="border-t py-8">
-        <div className="container text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Roo_mue
+        <div className="container flex flex-col items-center gap-1 text-center text-sm text-muted-foreground">
+          <p>© {new Date().getFullYear()} Roo_mue</p>
+          <p>
+            Made with care by kids from{" "}
+            <span className="font-semibold text-foreground">
+              Junior Webmaster Camp 14 (JWC14)
+            </span>{" "}
+            of Dubai International Airport
+          </p>
         </div>
       </footer>
     </div>

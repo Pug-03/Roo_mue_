@@ -92,9 +92,29 @@
     animation-play-state: paused;
   }
 
+  /* Slow, gentle drift for the decorative sign-language hands.
+     Duration/delay are set per-hand inline for an organic, staggered motion. */
+  .sign-hand {
+    animation-name: sign-drift;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    will-change: translate;
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .marquee-track {
+    .marquee-track,
+    .sign-hand {
       animation: none !important;
     }
+  }
+}
+
+@keyframes sign-drift {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -20px;
   }
 }
