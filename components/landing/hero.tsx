@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { buttonVariants } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
+import { BrandMark } from "@/components/brand/logo";
 import { FeatureGrid } from "./feature-grid";
 
 export async function Hero() {
@@ -11,7 +12,19 @@ export async function Hero() {
     <section className="container grid items-center gap-8 py-8 sm:py-12 lg:grid-cols-2 lg:gap-12 lg:py-20">
       {/* Left: copy + CTAs */}
       <div className="max-w-xl">
-        <p className="inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1.5 text-sm font-medium text-secondary-foreground">
+        <div className="mb-6 flex items-center gap-3.5">
+          <BrandMark className="size-14 sm:size-16" />
+          <div className="leading-none">
+            <p className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-2xl font-extrabold tracking-tight text-transparent sm:text-3xl">
+              Roo_mue
+            </p>
+            <p className="mt-1.5 text-sm font-medium text-muted-foreground">
+              รู้มือ · Thai Sign Language
+            </p>
+          </div>
+        </div>
+
+        <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-secondary/80 px-3 py-1.5 text-sm font-medium text-secondary-foreground backdrop-blur">
           <Icons.fast className="size-4 text-primary" aria-hidden />
           {t("tagline")}
         </p>

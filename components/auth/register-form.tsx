@@ -13,6 +13,7 @@ import { GoogleButton } from "./google-button";
 import { OtpInput } from "./otp-input";
 import { StepDots } from "./step-dots";
 import { Icons } from "@/components/icons";
+import { BrandMark } from "@/components/brand/logo";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const RESEND_SECONDS = 60;
@@ -143,8 +144,9 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
   }
 
   return (
-    <Card className="w-full max-w-[440px] p-5 sm:p-8">
+    <Card className="w-full max-w-[440px] border-white/60 bg-card/95 p-5 shadow-xl backdrop-blur-sm sm:p-8 dark:border-white/10">
       <div className="mb-5 text-center sm:mb-6">
+        <BrandMark className="mx-auto mb-4 size-14" />
         <h1 className="text-2xl font-extrabold">{t("title")}</h1>
         <div className="mt-4">
           <StepDots current={step} total={3} />

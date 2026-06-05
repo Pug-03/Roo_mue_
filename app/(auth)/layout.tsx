@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { LanguageToggle } from "@/components/language-toggle";
+import { Logo } from "@/components/brand/logo";
+import { SignBackdrop } from "@/components/brand/sign-backdrop";
 
 export default async function AuthLayout({
   children,
@@ -10,19 +12,15 @@ export default async function AuthLayout({
   const t = await getTranslations("common");
 
   return (
-    <div className="flex min-h-dvh flex-col bg-secondary/30">
+    <div className="relative flex min-h-dvh flex-col">
+      <SignBackdrop />
       <header className="w-full">
         <div className="container flex min-h-16 items-center justify-between gap-3 py-3">
           <Link
             href="/"
-            className="flex min-w-0 items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary font-extrabold text-primary-foreground">
-              R
-            </span>
-            <span className="truncate text-lg font-extrabold tracking-tight sm:text-xl">
-              {t("appName")}
-            </span>
+            <Logo size="sm" showThai={false} name={t("appName")} />
           </Link>
           <LanguageToggle />
         </div>

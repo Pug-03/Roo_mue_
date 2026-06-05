@@ -2,23 +2,19 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { LanguageToggle } from "@/components/language-toggle";
 import { buttonVariants } from "@/components/ui/button";
+import { Logo } from "@/components/brand/logo";
 
 export async function SiteHeader() {
   const t = await getTranslations();
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/70">
+    <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex min-h-16 items-center justify-between gap-3 py-3">
         <Link
           href="/"
-          className="flex min-w-0 items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
-          <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary font-extrabold text-primary-foreground">
-            R
-          </span>
-          <span className="truncate text-lg font-extrabold tracking-tight sm:text-xl">
-            {t("common.appName")}
-          </span>
+          <Logo size="sm" showThai={false} name={t("common.appName")} />
         </Link>
 
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">

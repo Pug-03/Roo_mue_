@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { GoogleButton } from "./google-button";
 import { Icons } from "@/components/icons";
+import { BrandMark } from "@/components/brand/logo";
 
 export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
   const t = useTranslations("auth.login");
@@ -39,11 +40,9 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
   }
 
   return (
-    <Card className="w-full max-w-[420px] p-5 sm:p-8">
+    <Card className="w-full max-w-[420px] border-white/60 bg-card/95 p-5 shadow-xl backdrop-blur-sm sm:p-8 dark:border-white/10">
       <div className="mb-5 text-center sm:mb-6">
-        <span className="mx-auto grid size-12 place-items-center rounded-xl bg-primary text-2xl font-extrabold text-primary-foreground">
-          R
-        </span>
+        <BrandMark className="mx-auto size-14" />
         <h1 className="mt-4 text-2xl font-extrabold">{t("title")}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{t("subtitle")}</p>
       </div>

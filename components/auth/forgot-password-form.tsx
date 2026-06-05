@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { BrandMark } from "@/components/brand/logo";
 import { OtpInput } from "./otp-input";
 import { Icons } from "@/components/icons";
 
@@ -88,7 +89,8 @@ export function ForgotPasswordForm() {
   }
 
   return (
-    <Card className="w-full max-w-[420px] p-5 sm:p-8">
+    <Card className="w-full max-w-[420px] border-white/60 bg-card/95 p-5 shadow-xl backdrop-blur-sm sm:p-8 dark:border-white/10">
+      <BrandMark className="mx-auto mb-4 size-14" />
       <h1 className="text-center text-2xl font-extrabold">{t("title")}</h1>
 
       {step === 1 && (
