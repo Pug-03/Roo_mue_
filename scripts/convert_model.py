@@ -13,7 +13,10 @@ which is unavailable on Windows, so pin to the 3.x line):
     # place actions3.h5 next to this script (download from the repo), then:
     python scripts/convert_model.py path/to/actions3.h5
 """
-import os, sys, json
+import json
+import os
+import sys
+
 import tensorflow as tf
 import tensorflowjs as tfjs
 from tensorflow.keras.models import Sequential
@@ -31,16 +34,18 @@ LABELS = [
 
 
 def build():
-    m = Sequential()
-    m.add(Input(shape=(30, 258)))
-    m.add(LSTM(128, return_sequences=True, activation="relu"))
-    m.add(LSTM(64, return_sequences=False, activation="relu"))
-    m.add(Dense(32, activation="relu"))
-    m.add(Dense(NUM, activation="softmax"))
-    return m
+    """Rebuild the 29-word LSTM architecture for loading a weights-only .h5 file."""
+    model = Sequential()
+    model.add(Input(shape=(30, 258)))
+    model.add(LSTM(128, return_sequences=True, activation="relu"))
+    model.add(LSTM(64, return_sequences=False, activation="relu"))
+    model.add(Dense(32, activation="relu"))
+    model.add(Dense(NUM, activation="softmax"))
+    return model
 
 
 def main():
+    """Load actions3.h5 (full model, or weights into a rebuilt model) and export to TFJS."""
     h5 = sys.argv[1] if len(sys.argv) > 1 else "actions3.h5"
     assert len(LABELS) == NUM
     try:

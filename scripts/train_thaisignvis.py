@@ -33,7 +33,10 @@ The architecture, augmentation, and callbacks below are set up to give it a good
 shot; inspect the printed val/test accuracy and iterate (epochs, units, dropout).
 --------------------------------------------------------------------------------
 """
-import os, sys, json
+import json
+import os
+import sys
+
 import numpy as np
 
 SEQ_LEN = 30
@@ -47,6 +50,7 @@ OUT_DIR = os.path.join(os.path.dirname(__file__), "..", "public", "models", "ths
 
 # ---- 1. Locate the dataset --------------------------------------------------
 def resolve_root() -> str:
+    """Return the dataset root, downloading it via kagglehub if not set locally."""
     if DATA_ROOT and os.path.isdir(DATA_ROOT):
         return DATA_ROOT
     try:
@@ -75,6 +79,8 @@ def discover_classes(root: str) -> dict[str, list[str]]:
 
 # ---- 2. Extract the same 258-dim Holistic features the browser uses ---------
 def extract_sequence(video_path: str, holistic) -> np.ndarray | None:
+    """Run Holistic over a clip and return its 258-dim per-frame features, resampled
+    to SEQ_LEN frames. Returns None if the video yields no readable frames."""
     import cv2
     cap = cv2.VideoCapture(video_path)
     frames = []
@@ -92,6 +98,8 @@ def extract_sequence(video_path: str, holistic) -> np.ndarray | None:
 
 
 def keypoints_258(res) -> np.ndarray:
+    """Flatten one Holistic result into the 258-dim vector (pose 132 + hands 63 + 63),
+    zero-filling any landmark group MediaPipe did not detect."""
     pose = (
         np.array([[p.x, p.y, p.z, p.visibility] for p in res.pose_landmarks.landmark]).flatten()
         if res.pose_landmarks else np.zeros(33 * 4)
@@ -117,10 +125,11 @@ def resample(seq: np.ndarray, target: int) -> np.ndarray:
 
 
 def build_dataset(classes: dict[str, list[str]]):
+    """Extract feature sequences for every clip and return (X, y, labels)."""
     import mediapipe as mp
     from tqdm import tqdm
     labels = sorted(classes.keys())
-    label_to_idx = {l: i for i, l in enumerate(labels)}
+    label_to_idx = {label: i for i, label in enumerate(labels)}
     X, y = [], []
     with mp.solutions.holistic.Holistic(
         min_detection_confidence=0.5, min_tracking_confidence=0.5
@@ -136,9 +145,10 @@ def build_dataset(classes: dict[str, list[str]]):
 
 # ---- 3. Model (identical to the app's inference architecture) ---------------
 def build_model(num_classes: int):
+    """Build and compile the LSTM classifier (identical to the app's inference model)."""
     from tensorflow.keras.models import Sequential
     from tensorflow.keras.layers import LSTM, Dense, Dropout, Input
-    m = Sequential([
+    model = Sequential([
         Input(shape=(SEQ_LEN, FEATURE_DIM)),
         LSTM(128, return_sequences=True, activation="relu"),
         Dropout(0.3),
@@ -147,35 +157,40 @@ def build_model(num_classes: int):
         Dense(32, activation="relu"),
         Dense(num_classes, activation="softmax"),
     ])
-    m.compile(optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"])
-    return m
+    model.compile(optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"])
+    return model
 
 
-def main():
-    import tensorflow as tf
-    import tensorflowjs as tfjs
-    from sklearn.model_selection import train_test_split
-
-    root = resolve_root()
-    classes = discover_classes(root)
-    print(f"{len(classes)} classes:", sorted(classes)[:10], "...")
-
+def load_features(classes: dict[str, list[str]]):
+    """Return (X, y, labels), reusing the cached feature archive when it exists."""
     cache = os.path.join(os.path.dirname(__file__), "thaisignvis_features.npz")
     if os.path.exists(cache):
-        d = np.load(cache, allow_pickle=True)
-        X, y, labels = d["X"], d["y"], list(d["labels"])
-    else:
-        X, y, labels = build_dataset(classes)
-        np.savez_compressed(cache, X=X, y=y, labels=np.array(labels, dtype=object))
-    print("Dataset:", X.shape, "labels:", len(labels))
+        data = np.load(cache, allow_pickle=True)
+        return data["X"], data["y"], list(data["labels"])
+    X, y, labels = build_dataset(classes)
+    np.savez_compressed(cache, X=X, y=y, labels=np.array(labels, dtype=object))
+    return X, y, labels
 
-    X_tr, X_tmp, y_tr, y_tmp = train_test_split(X, y, test_size=0.3, stratify=y, random_state=42)
-    X_val, X_te, y_val, y_te = train_test_split(X_tmp, y_tmp, test_size=0.5, stratify=y_tmp, random_state=42)
 
-    model = build_model(len(labels))
-    model.summary()
+def split_dataset(X: np.ndarray, y: np.ndarray):
+    """Stratified split into train/val/test (70/15/15), returned as (X, y) pairs."""
+    from sklearn.model_selection import train_test_split
+    X_train, X_tmp, y_train, y_tmp = train_test_split(
+        X, y, test_size=0.3, stratify=y, random_state=42
+    )
+    X_val, X_test, y_val, y_test = train_test_split(
+        X_tmp, y_tmp, test_size=0.5, stratify=y_tmp, random_state=42
+    )
+    return (X_train, y_train), (X_val, y_val), (X_test, y_test)
+
+
+def train_model(model, train, val):
+    """Fit the model with early stopping and LR reduction on the val split."""
+    import tensorflow as tf
+    X_train, y_train = train
+    X_val, y_val = val
     model.fit(
-        X_tr, y_tr,
+        X_train, y_train,
         validation_data=(X_val, y_val),
         epochs=200, batch_size=32,
         callbacks=[
@@ -184,9 +199,10 @@ def main():
         ],
     )
 
-    loss, acc = model.evaluate(X_te, y_te, verbose=0)
-    print(f"\n==> TEST ACCURACY: {acc*100:.2f}%  (target > 90%)")
 
+def export_tfjs(model, labels, test_accuracy: float):
+    """Save the TFJS model plus labels.json and meta.json into OUT_DIR."""
+    import tensorflowjs as tfjs
     out = os.path.abspath(OUT_DIR)
     os.makedirs(out, exist_ok=True)
     tfjs.converters.save_keras_model(model, out)
@@ -195,8 +211,29 @@ def main():
     with open(os.path.join(out, "meta.json"), "w", encoding="utf-8") as f:
         json.dump({"seqLen": SEQ_LEN, "featureDim": FEATURE_DIM,
                    "numClasses": len(labels), "source": "thaisignvis",
-                   "testAccuracy": round(float(acc), 4)}, f, ensure_ascii=False, indent=2)
+                   "testAccuracy": round(float(test_accuracy), 4)}, f, ensure_ascii=False, indent=2)
     print("Exported TFJS model ->", out)
+
+
+def main():
+    """Locate the dataset, extract features, train the LSTM, and export it to TFJS."""
+    root = resolve_root()
+    classes = discover_classes(root)
+    print(f"{len(classes)} classes:", sorted(classes)[:10], "...")
+
+    X, y, labels = load_features(classes)
+    print("Dataset:", X.shape, "labels:", len(labels))
+
+    train, val, (X_test, y_test) = split_dataset(X, y)
+
+    model = build_model(len(labels))
+    model.summary()
+    train_model(model, train, val)
+
+    _, acc = model.evaluate(X_test, y_test, verbose=0)
+    print(f"\n==> TEST ACCURACY: {acc*100:.2f}%  (target > 90%)")
+
+    export_tfjs(model, labels, acc)
 
 
 if __name__ == "__main__":

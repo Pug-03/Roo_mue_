@@ -3,8 +3,10 @@ import { StyleSheet, View } from 'react-native';
 import Animated, { Keyframe, Easing } from 'react-native-reanimated';
 
 import classes from './animated-icon.module.css';
+
 const DURATION = 300;
 
+/** Splash overlay placeholder for web — the native splash screen handles this, so this is a no-op. */
 export function AnimatedSplashOverlay() {
   return null;
 }
@@ -54,6 +56,7 @@ const glowKeyframe = new Keyframe({
   },
 });
 
+/** Animated Expo logo: a rotating glow behind the scaling logo, shown on the home screen. */
 export function AnimatedIcon() {
   return (
     <View style={styles.iconContainer}>
