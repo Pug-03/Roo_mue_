@@ -12,13 +12,13 @@ export async function Hero() {
     <section className="container grid items-center gap-8 py-8 sm:py-12 lg:grid-cols-2 lg:gap-12 lg:py-20">
       {/* Left: copy + CTAs */}
       <div className="max-w-xl">
-        <div className="mb-6 flex items-center gap-3.5">
-          <BrandMark className="size-14 sm:size-16" />
+        <div className="mb-6 flex items-center gap-4">
+          <BrandMark className="size-20 sm:size-24" />
           <div className="leading-none">
-            <p className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-2xl font-extrabold tracking-tight text-transparent sm:text-3xl">
+            <p className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
               Roo_mue
             </p>
-            <p className="mt-1.5 text-sm font-medium text-muted-foreground">
+            <p className="mt-2 text-sm font-medium text-muted-foreground sm:text-base">
               รู้มือ · Thai Sign Language
             </p>
           </div>
