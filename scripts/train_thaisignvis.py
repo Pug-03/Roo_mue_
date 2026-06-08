@@ -33,7 +33,7 @@ The architecture, augmentation, and callbacks below are set up to give it a good
 shot; inspect the printed val/test accuracy and iterate (epochs, units, dropout).
 --------------------------------------------------------------------------------
 """
-import os, sys, glob, json
+import os, sys, json
 import numpy as np
 
 SEQ_LEN = 30
