@@ -5,7 +5,9 @@
     "switchToThai": "ไทย",
     "switchToEnglish": "English",
     "prevSlide": "เลื่อนไปก่อนหน้า",
-    "nextSlide": "เลื่อนไปถัดไป"
+    "nextSlide": "เลื่อนไปถัดไป",
+    "switchToDark": "เปลี่ยนเป็นโหมดมืด",
+    "switchToLight": "เปลี่ยนเป็นโหมดสว่าง"
   },
   "nav": {
     "home": "หน้าหลัก",

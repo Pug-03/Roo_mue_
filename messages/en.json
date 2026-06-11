@@ -5,7 +5,9 @@
     "switchToThai": "ไทย",
     "switchToEnglish": "English",
     "prevSlide": "Previous slide",
-    "nextSlide": "Next slide"
+    "nextSlide": "Next slide",
+    "switchToDark": "Switch to dark mode",
+    "switchToLight": "Switch to light mode"
   },
   "nav": {
     "home": "Home",

@@ -34,6 +34,7 @@ import {
   MessageSquareText,
   Mic,
   MicOff,
+  Moon,
   MoreHorizontal,
   Pencil,
   PhoneCall,
@@ -44,6 +45,7 @@ import {
   Smile,
   Speech,
   Stethoscope,
+  Sun,
   User,
   Users,
   UtensilsCrossed,
@@ -96,6 +98,8 @@ export const Icons = {
   language: Languages,
   profile: User,
   settings: Settings,
+  sun: Sun,
+  moon: Moon,
 
   // Family call
   call: PhoneCall,

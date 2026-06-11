@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { authOptions } from "@/lib/auth";
 import { AppNav } from "@/components/app/app-nav";
 import { LanguageToggle } from "@/components/language-toggle";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 
 export default async function AppLayout({
@@ -28,6 +29,7 @@ export default async function AppLayout({
             Roo_mue
           </Link>
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            <ThemeToggle />
             <LanguageToggle />
             <SignOutButton label={t("signOut")} />
           </div>
