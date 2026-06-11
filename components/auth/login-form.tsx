@@ -30,13 +30,12 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
       password,
       redirect: false,
     });
-    setLoading(false);
     if (res?.error) {
       setError(t("invalid"));
+      setLoading(false);
       return;
     }
     router.push("/app");
-    router.refresh();
   }
 
   return (
