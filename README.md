@@ -66,6 +66,50 @@ The stack is organized into the layers below.
 | ESLint (`eslint-config-next`) | Linting |
 | `tsc` | Type checking |
 
+## How It Works
+
+### Recognition pipeline (process flow)
+
+The camera-to-sentence flow runs entirely in the browser, with only the final
+sentence sent to the server.
+
+![Process flowchart](docs/how-it-works.svg)
+
+1. **Consent gate** — the camera never opens until the user taps "Allow"
+   (`components/app/camera-translate.tsx`).
+2. **Capture** — `getUserMedia()` opens a 640×480 front-camera stream; a
+   `requestAnimationFrame` loop feeds frames to MediaPipe at ~24 fps.
+3. **Landmarks** — MediaPipe Holistic extracts hand/face/pose keypoints, which
+   are pushed into a rolling sequence buffer (`lib/holistic/keypoints.ts`).
+4. **Inference** — when a hand is visible and the buffer is full, the TFJS model
+   predicts the top-2 candidate words (`lib/translation/tfjs-client.ts`).
+5. **Stability gate** — a word is committed only when the same prediction repeats
+   4× in a row with confidence ≥ 0.6 (`lib/call/use-sign-recognition.ts`).
+6. **Output** — committed words are spoken via the Web Speech API and composed
+   into full-sentence suggestions (`lib/sentence/compose.ts`).
+
+### Architecture & data storage
+
+![Architecture and data storage](docs/architecture.svg)
+
+**Where the data lives and how it is stored:**
+
+- **Video & landmarks — never stored.** Camera frames and extracted keypoints
+  exist only in browser memory (RAM) during a session. They are not recorded,
+  cached, or uploaded.
+- **The ML model** is served as static files from `public/models/thsl/`, and
+  MediaPipe's WASM/model files are loaded from a CDN on first use.
+- **Login sessions** are kept in NextAuth cookies; account records live in the
+  database (`User`, `Account`, `Session`, `VerificationToken`).
+- **Only the final sentence is persisted.** When the user taps "Save", the
+  client calls the `saveSession()` server action
+  (`app/app/actions.ts`), which verifies the login and writes one
+  `TranslationSession` row via Prisma. The stored fields are: `sentence`,
+  `mode`, `contextTag`, `source`, and `candidatesJson` (the candidate list
+  serialized as a JSON string) — see `prisma/schema.prisma`.
+- **The database** is SQLite (`prisma/dev.db`) for local development and
+  PostgreSQL / Supabase in production — the same Prisma schema works for both.
+
 ## Important Folders
 
 - `app/` - Next.js routes, layouts, API routes, and server actions.
