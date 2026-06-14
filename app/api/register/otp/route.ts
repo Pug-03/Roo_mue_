@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { issueOtp } from "@/lib/otp";
+import { rateLimit } from "@/lib/rate-limit";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -15,6 +16,11 @@ export async function POST(req: Request) {
   const email = body.email?.trim().toLowerCase();
   if (!email || !EMAIL_RE.test(email)) {
     return NextResponse.json({ error: "invalid_email" }, { status: 400 });
+  }
+
+  // 3 OTP requests per email per 15 minutes — prevents email flooding
+  if (!rateLimit(`otp:${email}`, 3, 15 * 60 * 1000)) {
+    return NextResponse.json({ error: "too_many_requests" }, { status: 429 });
   }
 
   const existing = await prisma.user.findUnique({ where: { email } });

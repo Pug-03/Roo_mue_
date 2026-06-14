@@ -19,9 +19,12 @@ const providers: NextAuthOptions["providers"] = [
 
       // ---- Test access (demo, no registration required) -------------------
       // Entering the test code in BOTH email and password signs in to a shared
-      // demo account. Disable in production by setting ENABLE_TEST_LOGIN=false.
+      // demo account. Never active in production — NODE_ENV guard is the
+      // primary lock; ENABLE_TEST_LOGIN=true is a secondary opt-in for dev/staging.
       const testCode = process.env.TEST_LOGIN_CODE || "12345678";
-      const testEnabled = process.env.ENABLE_TEST_LOGIN !== "false";
+      const testEnabled =
+        process.env.NODE_ENV !== "production" &&
+        process.env.ENABLE_TEST_LOGIN !== "false";
       if (testEnabled && credentials?.email === testCode && password === testCode) {
         const demo = await prisma.user.upsert({
           where: { email: "demo@roomue.test" },

@@ -1,3 +1,4 @@
+import { randomInt } from "crypto";
 import { prisma } from "@/lib/db";
 
 const OTP_TTL_MS = 10 * 60 * 1000; // 10 minutes
@@ -8,7 +9,8 @@ export const emailConfigured = Boolean(
 );
 
 function generateCode(): string {
-  return String(Math.floor(100000 + Math.random() * 900000)); // 6 digits
+  // crypto.randomInt is cryptographically secure (unlike Math.random)
+  return String(randomInt(100000, 1000000));
 }
 
 /**

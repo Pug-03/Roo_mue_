@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { issueOtp } from "@/lib/otp";
+import { rateLimit } from "@/lib/rate-limit";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -17,11 +18,16 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "invalid_email" }, { status: 400 });
   }
 
+  // 3 OTP requests per email per 15 minutes — prevents email flooding
+  if (!rateLimit(`pwd-otp:${email}`, 3, 15 * 60 * 1000)) {
+    return NextResponse.json({ error: "too_many_requests" }, { status: 429 });
+  }
+
   const user = await prisma.user.findUnique({ where: { email } });
-  // NOTE: this dev build reveals whether an account exists so testers can
-  // proceed. In production, return { ok: true } regardless to avoid leaking.
+  // Always return 200 regardless of whether the email exists — returning 404
+  // would let attackers enumerate which emails are registered.
   if (!user) {
-    return NextResponse.json({ error: "user_not_found" }, { status: 404 });
+    return NextResponse.json({ ok: true });
   }
 
   const { devCode } = await issueOtp(email);

@@ -11,15 +11,60 @@ Roo_mue is a Next.js prototype for translating Thai Sign Language into Thai text
 - Includes a TensorFlow.js model bundle in `public/models/thsl`.
 - Supports Thai and English UI text through `next-intl`.
 
-## Tech Stack
+## Technology Framework
 
-- Next.js 14 App Router
-- React 18 and TypeScript
-- Tailwind CSS
-- NextAuth with Prisma Adapter
-- Prisma with SQLite
-- TensorFlow.js and MediaPipe for client-side sign recognition
-- next-intl for localization
+The stack is organized into the layers below.
+
+### Application Framework
+| Technology | Version | Role |
+| --- | --- | --- |
+| Next.js (App Router) | 14.2 | Full-stack React framework — routing, server actions, API routes |
+| React / React DOM | 18.3 | UI rendering |
+| TypeScript | 5.6 | Static typing across the codebase |
+
+### UI & Styling
+| Technology | Role |
+| --- | --- |
+| Tailwind CSS | Utility-first styling |
+| `tailwindcss-animate`, `tailwind-merge`, `clsx`, `class-variance-authority` | Animation, class composition, variant management |
+| next-themes | Light / dark mode |
+| lucide-react | Icon set |
+| PostCSS + Autoprefixer | CSS pipeline |
+
+### Authentication & Data
+| Technology | Role |
+| --- | --- |
+| NextAuth (`@next-auth/prisma-adapter`) | Authentication, optional Google OAuth, sessions |
+| Prisma (`@prisma/client`) | ORM and schema management |
+| SQLite (dev) / PostgreSQL (prod) | Database |
+| `bcryptjs` | Password hashing |
+| Custom OTP + rate limiting (`lib/otp.ts`, `lib/rate-limit.ts`) | Email verification, password reset, abuse protection |
+
+### Sign Recognition & ML (browser)
+| Technology | Role |
+| --- | --- |
+| @mediapipe/holistic | Full-body / hand / face landmark tracking |
+| @mediapipe/tasks-vision | Vision task inference |
+| @tensorflow/tfjs | In-browser model inference (`lib/translation/tfjs-client.ts`); model bundle in `public/models/thsl` |
+
+### Real-Time Communication
+| Technology | Role |
+| --- | --- |
+| WebRTC | Peer-to-peer call rooms (`lib/call/use-webrtc.ts`) |
+| Server-Sent Events | Call signaling channel (`app/api/call/[room]/`) |
+| Web Speech API | Speech recognition & text-to-speech (`lib/tts.ts`, `lib/call/use-speech-recognition.ts`) |
+
+### Internationalization
+| Technology | Role |
+| --- | --- |
+| next-intl | Thai / English UI and locale handling (`messages/`) |
+
+### Tooling
+| Technology | Role |
+| --- | --- |
+| pnpm | Package manager |
+| ESLint (`eslint-config-next`) | Linting |
+| `tsc` | Type checking |
 
 ## Important Folders
 
