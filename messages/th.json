@@ -209,7 +209,8 @@
       "email": "อีเมล",
       "nationalId": "เลขบัตรประชาชน",
       "disabilityCard": "เลขบัตรผู้พิการ",
-      "none": "-"
+      "none": "-",
+      "language": "ภาษา"
     },
     "call": {
       "title": "โทรหาครอบครัว",

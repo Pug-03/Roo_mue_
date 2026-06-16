@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { Card } from "@/components/ui/card";
 import { Icons } from "@/components/icons";
+import { LanguageToggle } from "@/components/language-toggle";
 
 export const dynamic = "force-dynamic";
 
@@ -51,6 +52,10 @@ export default async function ProfilePage() {
             <span className="font-medium">{r.value}</span>
           </div>
         ))}
+        <div className="flex items-center justify-between gap-4 p-4">
+          <span className="text-sm text-muted-foreground">{t("language")}</span>
+          <LanguageToggle />
+        </div>
       </Card>
     </div>
   );
