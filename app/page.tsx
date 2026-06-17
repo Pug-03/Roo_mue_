@@ -1,6 +1,5 @@
 import { SiteHeader } from "@/components/landing/site-header";
 import { Hero } from "@/components/landing/hero";
-import { SponsorsSection } from "@/components/landing/SponsorsSection";
 import { SignBackdrop } from "@/components/brand/sign-backdrop";
 
 export default function LandingPage() {
@@ -10,7 +9,6 @@ export default function LandingPage() {
       <SiteHeader />
       <main id="main" className="flex-1">
         <Hero />
-        <SponsorsSection />
       </main>
       <footer className="border-t py-8">
         <div className="container flex flex-col items-center gap-1 text-center text-sm text-muted-foreground">
