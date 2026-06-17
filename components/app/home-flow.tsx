@@ -8,6 +8,7 @@ import { Icons, type LucideIcon } from "@/components/icons";
 import { PresetPhrases } from "./preset-phrases";
 import { BasicSigns } from "./basic-signs";
 import { CameraTranslate } from "./camera-translate";
+import { AlphabetTranslate } from "./alphabet-translate";
 import { cn } from "@/lib/utils";
 
 type View =
@@ -17,7 +18,8 @@ type View =
   | "everydayMenu"
   | "basicSigns"
   | "everydayCategories"
-  | "camera";
+  | "camera"
+  | "alphabet";
 
 type CategoryKey =
   | "hospital"
@@ -68,6 +70,16 @@ export function HomeFlow() {
             setView(mode === "emergency" ? "emergencyMenu" : "everydayCategories")
           }
         />
+      </div>
+    );
+  }
+
+  // ---- Alphabet (A–Z) fingerspelling via server model ----
+  if (view === "alphabet") {
+    return (
+      <div>
+        <BackBar onBack={() => setView("context")} />
+        <AlphabetTranslate onClose={() => setView("context")} />
       </div>
     );
   }
@@ -197,6 +209,13 @@ export function HomeFlow() {
           desc={t("context.everydayDesc")}
           accent="blue"
           onClick={() => setView("everydayMenu")}
+        />
+        <ContextCard
+          Icon={Icons.hand}
+          title={t("context.alphabetTitle")}
+          desc={t("context.alphabetDesc")}
+          accent="blue"
+          onClick={() => setView("alphabet")}
         />
       </div>
     </div>

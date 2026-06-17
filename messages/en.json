@@ -108,7 +108,9 @@
       "emergencyTitle": "Emergency",
       "emergencyDesc": "Fast mode for crises",
       "everydayTitle": "Everyday situation",
-      "everydayDesc": "Day-to-day communication"
+      "everydayDesc": "Day-to-day communication",
+      "alphabetTitle": "Fingerspelling (A–Z)",
+      "alphabetDesc": "Spell English letters with ASL hand signs"
     },
     "emergency": {
       "submenuTitle": "Choose how to communicate",
@@ -200,7 +202,10 @@
       "searchPlaceholder": "Search sentences...",
       "empty": "No translation history yet",
       "play": "Read aloud",
-      "source": { "camera": "From camera", "preset": "Pre-set phrase" }
+      "source": {
+        "camera": "From camera",
+        "preset": "Pre-set phrase"
+      }
     },
     "profile": {
       "title": "Profile",
@@ -246,6 +251,31 @@
       "endCall": "End call",
       "play": "Read aloud",
       "back": "Back"
+    },
+    "alphabet": {
+      "permissionTitle": "Allow camera access?",
+      "permissionBody": "This mode recognizes the ASL alphabet using an online model, so captured frames are sent to a secure server for recognition. Nothing is stored.",
+      "allow": "Allow",
+      "cancel": "Cancel",
+      "starting": "Starting camera…",
+      "denied": "Could not access the camera. Please allow it in your browser and try again.",
+      "insecure": "The camera only works over https or on localhost.",
+      "retry": "Try again",
+      "modelLoading": "Warming up the recognition model…",
+      "modelError": "Could not reach the recognition model. Check your connection and try again.",
+      "frameHint": "Keep your hand inside the box",
+      "live": "Recognizing letters in real time",
+      "recognized": "Letter",
+      "raiseHand": "Show a hand sign in the box to begin",
+      "spelled": "Spelled word",
+      "empty": "Letters you sign will appear here",
+      "space": "Space",
+      "backspace": "Delete",
+      "play": "Read aloud",
+      "save": "Save word",
+      "saved": "Saved to history",
+      "clear": "Clear",
+      "stop": "Stop camera"
     }
   },
   "landing": {
@@ -256,12 +286,30 @@
     "ctaPrimary": "Get started free",
     "ctaSecondary": "I already have an account",
     "features": {
-      "capture": { "title": "Capture gestures", "subtitle": "Via your device camera" },
-      "ai": { "title": "Instant AI translation", "subtitle": "90%+ accuracy" },
-      "meanings": { "title": "2 meanings", "subtitle": "Pick the correct one" },
-      "tts": { "title": "Read aloud", "subtitle": "Thai text-to-speech" },
-      "emergency": { "title": "Emergency", "subtitle": "Fast mode for crises" },
-      "history": { "title": "Saved history", "subtitle": "Search past sentences" }
+      "capture": {
+        "title": "Capture gestures",
+        "subtitle": "Via your device camera"
+      },
+      "ai": {
+        "title": "Instant AI translation",
+        "subtitle": "90%+ accuracy"
+      },
+      "meanings": {
+        "title": "2 meanings",
+        "subtitle": "Pick the correct one"
+      },
+      "tts": {
+        "title": "Read aloud",
+        "subtitle": "Thai text-to-speech"
+      },
+      "emergency": {
+        "title": "Emergency",
+        "subtitle": "Fast mode for crises"
+      },
+      "history": {
+        "title": "Saved history",
+        "subtitle": "Search past sentences"
+      }
     },
     "sponsors": {
       "heading": "PROJECT SPONSORS",
