@@ -29,11 +29,13 @@ export async function Hero() {
           {t("tagline")}
         </p>
 
-        <h1 className="mt-5 text-3xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-          <span className="block text-gray-900 dark:text-foreground">
+        {/* leading-[1.35] + per-line padding gives Thai tone marks / upper vowels
+            room so stacked lines never collide (also reads cleaner in English). */}
+        <h1 className="mt-5 text-3xl font-extrabold leading-[1.49] tracking-tight sm:text-5xl lg:text-6xl">
+          <span className="block pb-1 text-gray-900 dark:text-foreground">
             {t("headlineLine1")}
           </span>
-          <span className="block text-blue-600 dark:text-primary">
+          <span className="block pb-1 text-blue-600 dark:text-primary">
             {t("headlineLine2")}
           </span>
         </h1>
