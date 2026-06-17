@@ -11,41 +11,41 @@ Roo_mue is a Next.js prototype for translating Thai Sign Language into Thai text
 - Includes a TensorFlow.js model bundle in `public/models/thsl`.
 - Supports Thai and English UI text through `next-intl`.
 
-## Technology Framework
+## Technology Stack
 
 The stack is organized into the layers below.
 
-### Application Framework
+### Frontend (web)
 | Technology | Version | Role |
 | --- | --- | --- |
 | Next.js (App Router) | 14.2 | Full-stack React framework — routing, server actions, API routes |
 | React / React DOM | 18.3 | UI rendering |
 | TypeScript | 5.6 | Static typing across the codebase |
+| Tailwind CSS (+ tailwindcss-animate) | 3.4 | Utility-first styling & animation |
+| clsx · tailwind-merge · class-variance-authority | — | Class composition & variant management |
+| lucide-react | 0.460 | Icon set |
+| next-themes | 0.4 | Light / dark mode |
+| next-intl | 3.26 | Thai / English i18n (`messages/`) |
 
-### UI & Styling
-| Technology | Role |
-| --- | --- |
-| Tailwind CSS | Utility-first styling |
-| `tailwindcss-animate`, `tailwind-merge`, `clsx`, `class-variance-authority` | Animation, class composition, variant management |
-| next-themes | Light / dark mode |
-| lucide-react | Icon set |
-| PostCSS + Autoprefixer | CSS pipeline |
+### Backend, Auth & Data
+| Technology | Version | Role |
+| --- | --- | --- |
+| NextAuth (`@next-auth/prisma-adapter`) | 4.24 | Authentication, optional Google OAuth, sessions |
+| Prisma (`@prisma/client`) | 5.22 | ORM and schema management |
+| SQLite (dev) / PostgreSQL · Supabase (prod) | — | Database |
+| Supabase Storage | — | Session / history assets |
+| `bcryptjs` | 2.4 | Password hashing |
+| Custom OTP + rate limiting (`lib/otp.ts`, `lib/rate-limit.ts`) | — | Email verification, password reset, abuse protection |
 
-### Authentication & Data
-| Technology | Role |
-| --- | --- |
-| NextAuth (`@next-auth/prisma-adapter`) | Authentication, optional Google OAuth, sessions |
-| Prisma (`@prisma/client`) | ORM and schema management |
-| SQLite (dev) / PostgreSQL (prod) | Database |
-| `bcryptjs` | Password hashing |
-| Custom OTP + rate limiting (`lib/otp.ts`, `lib/rate-limit.ts`) | Email verification, password reset, abuse protection |
-
-### Sign Recognition & ML (browser)
-| Technology | Role |
-| --- | --- |
-| @mediapipe/holistic | Full-body / hand / face landmark tracking |
-| @mediapipe/tasks-vision | Vision task inference |
-| @tensorflow/tfjs | In-browser model inference (`lib/translation/tfjs-client.ts`); model bundle in `public/models/thsl` |
+### AI / Sign Recognition
+| Technology | Version | Role |
+| --- | --- | --- |
+| @tensorflow/tfjs | 4.22 | In-browser Thai-sign model (`lib/translation/tfjs-client.ts`); bundle in `public/models/thsl` |
+| @mediapipe/holistic | 0.5 | Hand / face / pose landmark tracking |
+| @mediapipe/tasks-vision | 0.10 | Vision task inference |
+| FastAPI + Uvicorn | 0.115 / 0.30 | Local WLASL inference server (`wlasl-server/`) |
+| PyTorch + Transformers (VideoMAE) | 2.4 / 4.44 | Word-level ASL (WLASL-100) model |
+| PyAV | 12.3 | Decodes recorded clips server-side |
 
 ### Real-Time Communication
 | Technology | Role |
@@ -54,19 +54,62 @@ The stack is organized into the layers below.
 | Server-Sent Events | Call signaling channel (`app/api/call/[room]/`) |
 | Web Speech API | Speech recognition & text-to-speech (`lib/tts.ts`, `lib/call/use-speech-recognition.ts`) |
 
-### Internationalization
-| Technology | Role |
-| --- | --- |
-| next-intl | Thai / English UI and locale handling (`messages/`) |
+### Mobile app (`my-expo-app/`)
+| Technology | Version | Role |
+| --- | --- | --- |
+| Expo (+ Expo Router) | SDK 56 | Cross-platform app framework & routing |
+| React Native / React | 0.85 / 19.2 | Native UI runtime |
+| react-native-reanimated · gesture-handler · worklets | 4.3 | Animation & gestures |
 
 ### Tooling
-| Technology | Role |
-| --- | --- |
-| pnpm | Package manager |
-| ESLint (`eslint-config-next`) | Linting |
-| `tsc` | Type checking |
+| Technology | Version | Role |
+| --- | --- | --- |
+| pnpm | 10.30 | Package manager |
+| ESLint (`eslint-config-next`) | 8.57 | Linting |
+| PostCSS + Autoprefixer | — | CSS pipeline |
+| `tsc` | 5.6 | Type checking |
+
+> **Note:** AI runs two ways — Thai sign recognition runs fully **in-browser** (TensorFlow.js, no server), while the **WLASL word-level ASL** mode runs a **local Python/PyTorch server** (`wlasl-server/`) because HuggingFace no longer serves these models on its free Inference API.
 
 ## How It Works
+
+### User flow
+
+```mermaid
+flowchart TD
+    A([เปิดแอป]) --> B[Landing — เลือกภาษา ไทย/อังกฤษ]
+    B --> C{มีบัญชีแล้ว?}
+    C -->|มีแล้ว| D[เข้าสู่ระบบ — เบอร์โทร หรือ Google]
+    C -->|ยังไม่มี| E[สมัครสมาชิก — เบอร์โทร + รหัสผ่าน]
+    E --> F[ยืนยัน OTP 6 หลัก]
+    D --> G[หน้าหลัก — เลือกบริบทการสื่อสาร]
+    F --> G
+
+    G --> H{เลือกโหมด?}
+    H -->|ฉุกเฉิน| I{เมนูฉุกเฉิน}
+    H -->|เหตุการณ์ปกติ| J{เมนูปกติ}
+    H -->|คำภาษามือ ASL| K[WLASL — อัดคลิป ~2 วินาที]
+
+    I -->|ประโยคสำเร็จรูป| I1[เลือกประโยคฉุกเฉิน + อ่านออกเสียง]
+    I -->|กล้องแปล| L
+    J -->|20 คำพื้นฐาน| J1[ดูคำพื้นฐาน + อ่านออกเสียง]
+    J -->|กล้องแปล| J2[เลือกหมวดหมู่]
+    J2 --> L
+
+    L[กล้องภาษามือไทย — MediaPipe + TensorFlow.js]
+    L --> M[รู้จำคำ → แต่งประโยค]
+    K --> K1[Python Server — PyTorch / VideoMAE]
+    K1 --> M
+
+    M --> N[อ่านออกเสียง TTS]
+    N --> O{บันทึก?}
+    O -->|บันทึก| P[(บันทึกประวัติ — Prisma + SQLite)]
+    O -->|ยังไม่| G
+    P --> Q[ดูประวัติย้อนหลัง]
+    P --> R[โปรไฟล์]
+
+    G -.->|Family Calls| S[วิดีโอคอล WebRTC + รู้จำภาษามือสด]
+```
 
 ### Recognition pipeline (process flow)
 
@@ -118,6 +161,7 @@ sentence sent to the server.
 - `messages/` - Thai and English translation files.
 - `prisma/` - Prisma schema and local SQLite database.
 - `public/models/thsl/` - TFJS model files and labels.
+- `wlasl-server/` - local FastAPI/PyTorch server for the WLASL ASL-word mode.
 - `scripts/` - model training/conversion helpers.
 
 ## Local Setup

@@ -30,3 +30,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# python (wlasl-server)
+wlasl-server/.venv/
+**/__pycache__/
+*.pyc
+
+# dev server logs
+dev_out.log
+dev_err.log

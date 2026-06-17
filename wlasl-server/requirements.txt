@@ -1,0 +1,9 @@
+# Roo_mue local WLASL inference server.
+# CPU-only PyTorch is fine for testing; install a CUDA build if you have a GPU.
+fastapi==0.115.0
+uvicorn==0.30.6
+transformers==4.44.2
+torch==2.4.1
+av==12.3.0
+numpy==1.26.4
+pillow==10.4.0

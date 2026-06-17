@@ -8,7 +8,7 @@ import { Icons, type LucideIcon } from "@/components/icons";
 import { PresetPhrases } from "./preset-phrases";
 import { BasicSigns } from "./basic-signs";
 import { CameraTranslate } from "./camera-translate";
-import { AlphabetTranslate } from "./alphabet-translate";
+import { WordTranslate } from "./word-translate";
 import { cn } from "@/lib/utils";
 
 type View =
@@ -19,7 +19,7 @@ type View =
   | "basicSigns"
   | "everydayCategories"
   | "camera"
-  | "alphabet";
+  | "wlasl";
 
 type CategoryKey =
   | "hospital"
@@ -74,12 +74,12 @@ export function HomeFlow() {
     );
   }
 
-  // ---- Alphabet (A–Z) fingerspelling via server model ----
-  if (view === "alphabet") {
+  // ---- WLASL word-level ASL via server model ----
+  if (view === "wlasl") {
     return (
       <div>
         <BackBar onBack={() => setView("context")} />
-        <AlphabetTranslate onClose={() => setView("context")} />
+        <WordTranslate onClose={() => setView("context")} />
       </div>
     );
   }
@@ -212,10 +212,10 @@ export function HomeFlow() {
         />
         <ContextCard
           Icon={Icons.hand}
-          title={t("context.alphabetTitle")}
-          desc={t("context.alphabetDesc")}
+          title={t("context.wlaslTitle")}
+          desc={t("context.wlaslDesc")}
           accent="blue"
-          onClick={() => setView("alphabet")}
+          onClick={() => setView("wlasl")}
         />
       </div>
     </div>
