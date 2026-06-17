@@ -74,7 +74,7 @@ function SponsorCard({ name, slug, className }: Sponsor & { className?: string }
   return (
     <div
       className={cn(
-        "flex h-40 w-full items-center justify-center rounded-2xl bg-white p-6 transition-transform hover:scale-[1.02] sm:h-48 sm:p-8",
+        "flex h-40 w-full items-center justify-center rounded-2xl p-6 transition-transform hover:scale-[1.02] sm:h-48 sm:p-8",
         className
       )}
     >

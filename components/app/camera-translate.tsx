@@ -182,8 +182,8 @@ export function CameraTranslate({
           {liveTop ? (
             <>
               <div className="flex items-baseline justify-between gap-2">
-                <span className="text-2xl font-extrabold sm:text-3xl">{liveTop.text}</span>
-                <span className="text-sm tabular-nums text-muted-foreground">
+                <span className="min-w-0 break-words text-2xl font-extrabold sm:text-3xl">{liveTop.text}</span>
+                <span className="shrink-0 text-sm tabular-nums text-muted-foreground">
                   {Math.round(liveTop.confidence * 100)}%
                 </span>
               </div>

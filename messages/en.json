@@ -209,8 +209,7 @@
       "email": "Email",
       "nationalId": "National ID",
       "disabilityCard": "Disability card number",
-      "none": "-",
-      "language": "Language"
+      "none": "-"
     },
     "call": {
       "title": "Family call",
