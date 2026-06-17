@@ -11,12 +11,12 @@ import { Label } from "@/components/ui/label";
 import { BrandMark } from "@/components/brand/logo";
 import { OtpInput } from "./otp-input";
 import { Icons } from "@/components/icons";
+import { isValidPhone, formatPhone } from "@/lib/phone";
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const RESEND_SECONDS = 60;
 const KNOWN_ERRORS = new Set([
   "user_not_found",
-  "invalid_email",
+  "invalid_phone",
   "weak_password",
   "invalid_otp",
   "otp_failed",
@@ -27,7 +27,7 @@ export function ForgotPasswordForm() {
   const router = useRouter();
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
-  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState(""); // digits only
   const [otp, setOtp] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -47,13 +47,13 @@ export function ForgotPasswordForm() {
 
   async function sendCode() {
     setError(null);
-    if (!EMAIL_RE.test(email)) return setError(errMsg("invalid_email"));
+    if (!isValidPhone(phone)) return setError(errMsg("invalid_phone"));
     setLoading(true);
     try {
       const res = await fetch("/api/password/otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ phone }),
       });
       const data = await res.json();
       if (!res.ok) return setError(errMsg(data.error));
@@ -76,7 +76,7 @@ export function ForgotPasswordForm() {
       const res = await fetch("/api/password/reset", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, otp, password }),
+        body: JSON.stringify({ phone, otp, password }),
       });
       const data = await res.json();
       if (!res.ok) return setError(errMsg(data.error));
@@ -97,13 +97,17 @@ export function ForgotPasswordForm() {
         <div className="mt-6 space-y-4">
           <p className="text-sm text-muted-foreground">{t("step1Heading")}</p>
           <div className="space-y-1.5">
-            <Label htmlFor="email">{t("email")}</Label>
+            <Label htmlFor="phone">{t("phone")}</Label>
             <Input
-              id="email"
-              type="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              id="phone"
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel"
+              placeholder="081-234-5678"
+              value={formatPhone(phone)}
+              onChange={(e) =>
+                setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))
+              }
             />
           </div>
           {error && <FieldError>{error}</FieldError>}
@@ -117,7 +121,7 @@ export function ForgotPasswordForm() {
       {step === 2 && (
         <div className="mt-6 space-y-5">
           <p className="text-sm">
-            {t("sentTo")} <span className="font-semibold">{email}</span>
+            {t("sentTo")} <span className="font-semibold">{formatPhone(phone)}</span>
           </p>
 
           <div className="space-y-2">

@@ -14,8 +14,8 @@ import { OtpInput } from "./otp-input";
 import { StepDots } from "./step-dots";
 import { Icons } from "@/components/icons";
 import { BrandMark } from "@/components/brand/logo";
+import { isValidPhone, normalizePhone, formatPhone } from "@/lib/phone";
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const RESEND_SECONDS = 60;
 
 /** Formats 13 digits as the Thai national ID grouping: X-XXXX-XXXXX-XX-X. */
@@ -36,7 +36,7 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
   const router = useRouter();
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
-  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState(""); // digits only
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [nationalId, setNationalId] = useState(""); // digits only
@@ -62,7 +62,7 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
 
   function goStep1ToStep2() {
     setError(null);
-    if (!EMAIL_RE.test(email)) return setError(errMsg("invalid_email"));
+    if (!isValidPhone(phone)) return setError(errMsg("invalid_phone"));
     setStep(2);
   }
 
@@ -73,7 +73,7 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
       const res = await fetch("/api/register/otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ phone }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -110,7 +110,7 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email,
+          phone,
           password,
           firstName,
           lastName,
@@ -126,7 +126,7 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
       }
       // Auto sign-in after successful registration.
       const login = await signIn("credentials", {
-        email,
+        phone,
         password,
         redirect: false,
       });
@@ -161,13 +161,17 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
           </h2>
           {googleEnabled && <GoogleButton label={t("step1.google")} />}
           <div className="space-y-1.5">
-            <Label htmlFor="email">{t("step1.emailLabel")}</Label>
+            <Label htmlFor="phone">{t("step1.phoneLabel")}</Label>
             <Input
-              id="email"
-              type="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              id="phone"
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel"
+              placeholder="081-234-5678"
+              value={formatPhone(phone)}
+              onChange={(e) =>
+                setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))
+              }
             />
           </div>
           {error && <FieldError>{error}</FieldError>}
@@ -262,7 +266,7 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
               {t("step3.heading")}
             </h2>
             <p className="mt-1 text-sm">
-              {t("step3.sentTo")} <span className="font-semibold">{email}</span>
+              {t("step3.sentTo")} <span className="font-semibold">{formatPhone(phone)}</span>
             </p>
           </div>
 
@@ -323,8 +327,8 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
 }
 
 const MESSAGE_KEYS = {
-  invalid_email: 1,
-  email_taken: 1,
+  invalid_phone: 1,
+  phone_taken: 1,
   weak_password: 1,
   missing_name: 1,
   invalid_national_id: 1,

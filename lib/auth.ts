@@ -4,47 +4,49 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
+import { normalizePhone } from "@/lib/phone";
 
 const providers: NextAuthOptions["providers"] = [
   CredentialsProvider({
     name: "credentials",
     credentials: {
-      email: { label: "Email", type: "email" },
+      phone: { label: "Phone", type: "tel" },
       password: { label: "Password", type: "password" },
     },
     async authorize(credentials) {
-      const email = credentials?.email?.trim().toLowerCase();
       const password = credentials?.password;
-      if (!email || !password) return null;
+      if (!credentials?.phone || !password) return null;
 
       // ---- Test access (demo, no registration required) -------------------
-      // Entering the test code in BOTH email and password signs in to a shared
+      // Entering the test code in BOTH phone and password signs in to a shared
       // demo account. Never active in production — NODE_ENV guard is the
       // primary lock; ENABLE_TEST_LOGIN=true is a secondary opt-in for dev/staging.
       const testCode = process.env.TEST_LOGIN_CODE || "12345678";
       const testEnabled =
         process.env.NODE_ENV !== "production" &&
         process.env.ENABLE_TEST_LOGIN !== "false";
-      if (testEnabled && credentials?.email === testCode && password === testCode) {
+      if (testEnabled && credentials.phone === testCode && password === testCode) {
         const demo = await prisma.user.upsert({
-          where: { email: "demo@roomue.test" },
+          where: { phone: "0000000000" },
           update: {},
           create: {
-            email: "demo@roomue.test",
+            phone: "0000000000",
             firstName: "Demo",
             lastName: "User",
-            emailVerified: new Date(),
+            phoneVerified: new Date(),
           },
         });
         return {
           id: demo.id,
-          email: demo.email,
           name: "Demo User",
           image: null,
         };
       }
 
-      const user = await prisma.user.findUnique({ where: { email } });
+      const phone = normalizePhone(credentials.phone);
+      if (!phone) return null;
+
+      const user = await prisma.user.findUnique({ where: { phone } });
       if (!user?.passwordHash) return null;
 
       const ok = await bcrypt.compare(password, user.passwordHash);

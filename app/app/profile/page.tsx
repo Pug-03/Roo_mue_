@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { Card } from "@/components/ui/card";
 import { Icons } from "@/components/icons";
+import { formatPhone } from "@/lib/phone";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +25,7 @@ export default async function ProfilePage() {
   const rows: { label: string; value: string }[] = [
     { label: t("firstName"), value: user?.firstName || t("none") },
     { label: t("lastName"), value: user?.lastName || t("none") },
-    { label: t("email"), value: user?.email || t("none") },
+    { label: t("phone"), value: user?.phone ? formatPhone(user.phone) : t("none") },
     { label: t("nationalId"), value: maskNationalId(user?.nationalId ?? null) || t("none") },
     { label: t("disabilityCard"), value: user?.disabilityCardNo || t("none") },
   ];
@@ -39,7 +40,7 @@ export default async function ProfilePage() {
           <h1 className="text-xl font-extrabold">{t("title")}</h1>
           <p className="text-sm text-muted-foreground">
             {[user?.firstName, user?.lastName].filter(Boolean).join(" ") ||
-              user?.email}
+              (user?.phone ? formatPhone(user.phone) : null)}
           </p>
         </div>
       </div>

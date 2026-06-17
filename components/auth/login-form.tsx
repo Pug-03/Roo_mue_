@@ -16,7 +16,7 @@ import { BrandMark } from "@/components/brand/logo";
 export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
   const t = useTranslations("auth.login");
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -26,7 +26,7 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
     setError(null);
     setLoading(true);
     const res = await signIn("credentials", {
-      email,
+      phone,
       password,
       redirect: false,
     });
@@ -48,15 +48,16 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
 
       <form onSubmit={onSubmit} className="space-y-4">
         <div className="space-y-1.5">
-          <Label htmlFor="email">{t("email")}</Label>
+          <Label htmlFor="phone">{t("phone")}</Label>
           <Input
-            id="email"
-            type="text"
-            inputMode="email"
-            autoComplete="username"
+            id="phone"
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
+            placeholder="081-234-5678"
             required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
           />
         </div>
         <div className="space-y-1.5">

@@ -18,7 +18,11 @@ datasource db {
 
 model User {
   id            String    @id @default(cuid())
-  email         String    @unique
+  // Phone is the primary login identifier (10-digit local Thai number).
+  phone         String?   @unique
+  phoneVerified DateTime?
+  // Email is optional now — kept for Google OAuth / NextAuth adapter compatibility.
+  email         String?   @unique
   emailVerified DateTime?
   passwordHash  String? // null when the account is Google-OAuth only
   image         String?

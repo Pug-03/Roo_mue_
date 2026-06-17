@@ -2,11 +2,10 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 import { verifyOtp } from "@/lib/otp";
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import { normalizePhone } from "@/lib/phone";
 
 type Body = {
-  email?: string;
+  phone?: string;
   password?: string;
   firstName?: string;
   lastName?: string;
@@ -23,13 +22,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "invalid_body" }, { status: 400 });
   }
 
-  const email = body.email?.trim().toLowerCase();
+  const phone = normalizePhone(body.phone ?? "");
   const { password, firstName, lastName, otp } = body;
   const nationalId = body.nationalId?.replace(/\D/g, "");
   const disabilityCardNo = body.disabilityCardNo?.trim() || null;
 
-  if (!email || !EMAIL_RE.test(email))
-    return NextResponse.json({ error: "invalid_email" }, { status: 400 });
+  if (!phone)
+    return NextResponse.json({ error: "invalid_phone" }, { status: 400 });
   if (!password || password.length < 8)
     return NextResponse.json({ error: "weak_password" }, { status: 400 });
   if (!firstName?.trim() || !lastName?.trim())
@@ -39,11 +38,11 @@ export async function POST(req: Request) {
   if (!otp || otp.trim().length !== 6)
     return NextResponse.json({ error: "invalid_otp" }, { status: 400 });
 
-  const existing = await prisma.user.findUnique({ where: { email } });
+  const existing = await prisma.user.findUnique({ where: { phone } });
   if (existing)
-    return NextResponse.json({ error: "email_taken" }, { status: 409 });
+    return NextResponse.json({ error: "phone_taken" }, { status: 409 });
 
-  const ok = await verifyOtp(email, otp);
+  const ok = await verifyOtp(phone, otp);
   if (!ok)
     return NextResponse.json({ error: "otp_failed" }, { status: 400 });
 
@@ -51,13 +50,13 @@ export async function POST(req: Request) {
 
   await prisma.user.create({
     data: {
-      email,
+      phone,
       passwordHash,
       firstName: firstName.trim(),
       lastName: lastName.trim(),
       nationalId, // NOTE: encrypt at rest in production
       disabilityCardNo,
-      emailVerified: new Date(),
+      phoneVerified: new Date(),
     },
   });
 
