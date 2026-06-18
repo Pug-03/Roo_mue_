@@ -8,13 +8,7 @@ import { Icons, type LucideIcon } from "@/components/icons";
 import { PresetPhrases } from "./preset-phrases";
 import { BasicSigns } from "./basic-signs";
 import { CameraTranslate } from "./camera-translate";
-import { WordTranslate } from "./word-translate";
 import { cn } from "@/lib/utils";
-
-// WLASL needs the local Python inference server, which can't run on serverless
-// hosts (Vercel). Enabled only when NEXT_PUBLIC_ENABLE_WLASL="true" (local dev);
-// hidden in production so users aren't shown a mode that can't work there.
-const WLASL_ENABLED = process.env.NEXT_PUBLIC_ENABLE_WLASL === "true";
 
 type View =
   | "context"
@@ -23,8 +17,7 @@ type View =
   | "everydayMenu"
   | "basicSigns"
   | "everydayCategories"
-  | "camera"
-  | "wlasl";
+  | "camera";
 
 type CategoryKey =
   | "hospital"
@@ -75,16 +68,6 @@ export function HomeFlow() {
             setView(mode === "emergency" ? "emergencyMenu" : "everydayCategories")
           }
         />
-      </div>
-    );
-  }
-
-  // ---- WLASL word-level ASL via server model ----
-  if (view === "wlasl") {
-    return (
-      <div>
-        <BackBar onBack={() => setView("context")} />
-        <WordTranslate onClose={() => setView("context")} />
       </div>
     );
   }
@@ -215,15 +198,6 @@ export function HomeFlow() {
           accent="blue"
           onClick={() => setView("everydayMenu")}
         />
-        {WLASL_ENABLED && (
-          <ContextCard
-            Icon={Icons.hand}
-            title={t("context.wlaslTitle")}
-            desc={t("context.wlaslDesc")}
-            accent="blue"
-            onClick={() => setView("wlasl")}
-          />
-        )}
       </div>
     </div>
   );

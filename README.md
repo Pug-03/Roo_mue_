@@ -43,9 +43,6 @@ The stack is organized into the layers below.
 | @tensorflow/tfjs | 4.22 | In-browser Thai-sign model (`lib/translation/tfjs-client.ts`); bundle in `public/models/thsl` |
 | @mediapipe/holistic | 0.5 | Hand / face / pose landmark tracking |
 | @mediapipe/tasks-vision | 0.10 | Vision task inference |
-| FastAPI + Uvicorn | 0.115 / 0.30 | Local WLASL inference server (`wlasl-server/`) |
-| PyTorch + Transformers (VideoMAE) | 2.4 / 4.44 | Word-level ASL (WLASL-100) model |
-| PyAV | 12.3 | Decodes recorded clips server-side |
 
 ### Real-Time Communication
 | Technology | Role |
@@ -69,7 +66,7 @@ The stack is organized into the layers below.
 | PostCSS + Autoprefixer | — | CSS pipeline |
 | `tsc` | 5.6 | Type checking |
 
-> **Note:** AI runs two ways — Thai sign recognition runs fully **in-browser** (TensorFlow.js, no server), while the **WLASL word-level ASL** mode runs a **local Python/PyTorch server** (`wlasl-server/`) because HuggingFace no longer serves these models on its free Inference API.
+> **Note:** Thai sign recognition runs fully **in-browser** (TensorFlow.js + MediaPipe) — camera frames and keypoints never leave the device.
 
 ## How It Works
 
@@ -88,7 +85,6 @@ flowchart TD
     G --> H{เลือกโหมด?}
     H -->|ฉุกเฉิน| I{เมนูฉุกเฉิน}
     H -->|เหตุการณ์ปกติ| J{เมนูปกติ}
-    H -->|คำภาษามือ ASL| K[WLASL — อัดคลิป ~2 วินาที]
 
     I -->|ประโยคสำเร็จรูป| I1[เลือกประโยคฉุกเฉิน + อ่านออกเสียง]
     I -->|กล้องแปล| L
@@ -98,8 +94,6 @@ flowchart TD
 
     L[กล้องภาษามือไทย — MediaPipe + TensorFlow.js]
     L --> M[รู้จำคำ → แต่งประโยค]
-    K --> K1[Python Server — PyTorch / VideoMAE]
-    K1 --> M
 
     M --> N[อ่านออกเสียง TTS]
     N --> O{บันทึก?}
@@ -161,7 +155,6 @@ sentence sent to the server.
 - `messages/` - Thai and English translation files.
 - `prisma/` - Prisma schema and local SQLite database.
 - `public/models/thsl/` - TFJS model files and labels.
-- `wlasl-server/` - local FastAPI/PyTorch server for the WLASL ASL-word mode.
 - `scripts/` - model training/conversion helpers.
 
 ## Local Setup

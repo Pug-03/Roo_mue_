@@ -108,9 +108,7 @@
       "emergencyTitle": "Emergency",
       "emergencyDesc": "Fast mode for crises",
       "everydayTitle": "Everyday situation",
-      "everydayDesc": "Day-to-day communication",
-      "wlaslTitle": "ASL words (WLASL)",
-      "wlaslDesc": "Recognize word-level American Sign Language"
+      "everydayDesc": "Day-to-day communication"
     },
     "emergency": {
       "submenuTitle": "Choose how to communicate",
@@ -251,33 +249,6 @@
       "endCall": "End call",
       "play": "Read aloud",
       "back": "Back"
-    },
-    "wlasl": {
-      "permissionTitle": "Allow camera access?",
-      "permissionBody": "This mode recognizes ASL words with a model running locally on your computer. The short clip you record is processed on-device and is not stored.",
-      "allow": "Allow",
-      "cancel": "Cancel",
-      "starting": "Starting camera…",
-      "denied": "Could not access the camera. Please allow it in your browser and try again.",
-      "insecure": "The camera only works over https or on localhost.",
-      "retry": "Try again",
-      "modelError": "Could not reach the recognition model. Check your connection and try again.",
-      "frameHint": "Press the button, then sign one word",
-      "recording": "Recording… sign now",
-      "analyzing": "Analyzing…",
-      "signWord": "Sign a word",
-      "recognized": "Recognized word",
-      "pressToBegin": "Press “Sign a word” and perform one ASL sign",
-      "alternative": "Alternative",
-      "words": "Collected words",
-      "empty": "Recognized words will appear here",
-      "play": "Read aloud",
-      "save": "Save sentence",
-      "saved": "Saved to history",
-      "clear": "Clear",
-      "stop": "Stop camera",
-      "serverDown": "The ASL recognition server isn’t running. Open a terminal, go to the wlasl-server folder, and start it (see wlasl-server/README.md).",
-      "lowConfidence": "Not confident — no clear sign detected. Try again: make the sign fully within the ~2s, centered and well-lit."
     }
   },
   "landing": {
