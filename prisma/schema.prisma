@@ -1,16 +1,15 @@
 // Roo_mue data model.
 //
-// LOCAL DEV: SQLite (zero setup, runs immediately).
-// PRODUCTION: switch `provider` to "postgresql" and point DATABASE_URL at your
-// Postgres/Supabase instance. The models below are written to be portable;
-// enum-like fields use String so the same schema works on SQLite.
+// Database: PostgreSQL (Neon, Supabase, or any Postgres). Both local dev and
+// production use the same Postgres via DATABASE_URL. The models are written to
+// be portable; enum-like fields use String.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
