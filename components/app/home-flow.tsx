@@ -216,14 +216,14 @@ function ContextCard({
   accent: "red" | "blue";
   onClick: () => void;
 }) {
-  return (
+ return (
     <button type="button" onClick={onClick} className="text-left">
       <Card
         className={cn(
           "flex h-full flex-col items-center gap-3 border-2 p-5 text-center transition-all hover:shadow-md sm:p-8",
           accent === "red"
-            ? "border-destructive/30 hover:border-destructive"
-            : "border-primary/30 hover:border-primary"
+            ? "border-destructive/30 bg-destructive/30 hover:border-destructive"
+            : "border-primary/30 bg-primary/30 hover:border-primary"
         )}
       >
         <span
