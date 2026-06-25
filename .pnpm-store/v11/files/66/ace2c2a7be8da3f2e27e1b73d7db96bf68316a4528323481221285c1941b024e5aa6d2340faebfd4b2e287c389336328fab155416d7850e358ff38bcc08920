@@ -1,4 +1,4 @@
-###-begin-{pkgname}-completion-###
+git push origin main###-begin-{pkgname}-completion-###
 
 Register-ArgumentCompleter -CommandName '{pkgname}' -ScriptBlock {
     param(
