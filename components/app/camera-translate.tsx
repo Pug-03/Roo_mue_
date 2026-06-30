@@ -116,14 +116,18 @@ export function CameraTranslate({
   async function saveSentence() {
     const text = chosenText.trim();
     if (!text) return;
-    await saveSession({
-      mode,
-      contextTag,
-      sentence: text,
-      candidates: liveTop && liveSecond ? [liveTop, liveSecond] : undefined,
-      source: "camera",
-    });
-    setSaved(true);
+    try {
+      const res = await saveSession({
+        mode,
+        contextTag,
+        sentence: text,
+        candidates: liveTop && liveSecond ? [liveTop, liveSecond] : undefined,
+        source: "camera",
+      });
+      setSaved(res.ok);
+    } catch {
+      // Saving history is best-effort; ignore failures.
+    }
   }
 
   function clearSentence() {

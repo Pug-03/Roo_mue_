@@ -37,15 +37,21 @@ export function TranslationResult({
   }
 
   async function confirm() {
+    // Speak first — this is the primary action and must never be blocked by a
+    // failed history save.
     say(text);
-    await saveSession({
-      mode,
-      contextTag,
-      sentence: text,
-      candidates,
-      source: "camera",
-    });
-    setSaved(true);
+    try {
+      const res = await saveSession({
+        mode,
+        contextTag,
+        sentence: text,
+        candidates,
+        source: "camera",
+      });
+      setSaved(res.ok);
+    } catch {
+      // Saving history is best-effort; ignore failures so the UI stays usable.
+    }
   }
 
   return (

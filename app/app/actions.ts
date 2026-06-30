@@ -28,8 +28,20 @@ export type SaveSessionInput = {
 };
 
 /** Persists a finished translation to the user's history. */
-export async function saveSession(input: SaveSessionInput) {
+export async function saveSession(
+  input: SaveSessionInput
+): Promise<{ ok: boolean }> {
   const userId = await requireUserId();
+
+  // The JWT can reference a user that no longer exists — e.g. the dev DB was
+  // reset while a login cookie was still valid. Creating the row would throw a
+  // foreign-key error and crash the UI, so verify the user first and skip
+  // saving (best-effort history) instead.
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { id: true },
+  });
+  if (!user) return { ok: false };
 
   await prisma.translationSession.create({
     data: {
@@ -43,4 +55,5 @@ export async function saveSession(input: SaveSessionInput) {
   });
 
   revalidatePath("/app/history");
+  return { ok: true };
 }
