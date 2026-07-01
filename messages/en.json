@@ -17,6 +17,19 @@
     "login": "Log in",
     "register": "Sign up"
   },
+  "a11y": {
+    "title": "Accessibility",
+    "openLabel": "Open accessibility menu",
+    "voiceGuidance": "Voice guidance",
+    "voiceCommands": "Voice commands",
+    "largeText": "Large text",
+    "highContrast": "High contrast",
+    "on": "on",
+    "off": "off",
+    "voiceCommandsHint": "Say: home, call, history, profile, repeat, stop",
+    "listening": "Listening for voice commands",
+    "notSupported": "Voice commands aren't supported on this device"
+  },
   "auth": {
     "login": {
       "title": "Log in",
@@ -101,6 +114,7 @@
   "app": {
     "greeting": "Welcome",
     "signOut": "Sign out",
+    "skipToContent": "Skip to main content",
     "back": "Back",
     "context": {
       "title": "Select communication context",

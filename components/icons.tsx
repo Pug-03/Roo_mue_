@@ -13,6 +13,7 @@
  * below is mapped to a verified lucide-react icon with the closest meaning.
  */
 import {
+  Accessibility,
   AlertTriangle,
   Ambulance,
   ArrowLeft,
@@ -21,6 +22,7 @@ import {
   Bus,
   Camera,
   CheckCircle2,
+  Contrast,
   Copy,
   Eye,
   EyeOff,
@@ -46,6 +48,7 @@ import {
   Speech,
   Stethoscope,
   Sun,
+  Type,
   User,
   Users,
   UtensilsCrossed,
@@ -100,6 +103,11 @@ export const Icons = {
   settings: Settings,
   sun: Sun,
   moon: Moon,
+
+  // Accessibility
+  accessibility: Accessibility,
+  contrast: Contrast,
+  textSize: Type,
 
   // Family call
   call: PhoneCall,

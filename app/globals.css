@@ -85,6 +85,51 @@
   :focus-visible {
     @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
   }
+
+  /* ---- Accessibility modes (toggled on <html> by the A11y provider) ------- */
+
+  /* Large text: scale the root font size so every rem-based size grows. */
+  .a11y-large-text {
+    font-size: 118.75%; /* ~19px base */
+  }
+
+  /* High contrast: override the theme tokens with stronger values and give the
+     focus ring a thicker, fully-opaque outline. Higher specificity than the
+     :root / .dark token blocks above so these win. */
+  .a11y-high-contrast {
+    --foreground: 0 0% 0%;
+    --background: 0 0% 100%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+    --muted-foreground: 0 0% 15%;
+    --secondary-foreground: 0 0% 0%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --primary: 221 90% 38%;
+    --ring: 221 90% 38%;
+    --destructive: 0 85% 38%;
+  }
+  .a11y-high-contrast.dark {
+    --foreground: 0 0% 100%;
+    --background: 0 0% 0%;
+    --card: 0 0% 5%;
+    --card-foreground: 0 0% 100%;
+    --muted-foreground: 0 0% 88%;
+    --secondary-foreground: 0 0% 100%;
+    --border: 0 0% 80%;
+    --input: 0 0% 80%;
+    --primary: 217 95% 72%;
+    --ring: 217 95% 72%;
+    --destructive: 0 90% 70%;
+  }
+  .a11y-high-contrast :focus-visible {
+    outline: 3px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+  /* Drop the decorative background wash so text contrast is never reduced. */
+  .a11y-high-contrast body {
+    background-image: none;
+  }
 }
 
 @layer utilities {
