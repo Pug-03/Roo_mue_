@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 import { verifyOtp } from "@/lib/otp";
+import { rateLimit } from "@/lib/rate-limit";
 import { normalizePhone } from "@/lib/phone";
 
 type Body = {
@@ -37,6 +38,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "invalid_national_id" }, { status: 400 });
   if (!otp || otp.trim().length !== 6)
     return NextResponse.json({ error: "invalid_otp" }, { status: 400 });
+
+  // Limit OTP verification attempts to stop brute-forcing the 6-digit code.
+  if (!rateLimit(`reg-verify:${phone}`, 5, 15 * 60 * 1000)) {
+    return NextResponse.json({ error: "too_many_requests" }, { status: 429 });
+  }
 
   const existing = await prisma.user.findUnique({ where: { phone } });
   if (existing)

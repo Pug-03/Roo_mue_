@@ -34,3 +34,9 @@ next-env.d.ts
 # dev server logs
 dev_out.log
 dev_err.log
+
+# expo local dev cache/logs
+/.expo/
+
+# large local docs (not source)
+/Presentation*.pdf
