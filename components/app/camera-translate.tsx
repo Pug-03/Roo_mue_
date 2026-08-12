@@ -5,14 +5,12 @@ import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Icons } from "@/components/icons";
-import { FaceAnalyticsBar } from "./face-analytics-bar";
-import { EditableSentence } from "./editable-sentence";
+import { RecognitionPanel } from "./recognition-panel";
 import { useSignRecognition } from "@/lib/call/use-sign-recognition";
 import { useSpeak } from "@/lib/tts";
 import { saveSession } from "@/app/app/actions";
 import { getKnownLabels } from "@/lib/translation/tfjs-client";
 import { composeSentences } from "@/lib/sentence/compose";
-import { cn } from "@/lib/utils";
 import type { Candidate } from "@/lib/translation";
 
 type Phase = "permission" | "starting" | "denied" | "live";
@@ -138,8 +136,8 @@ export function CameraTranslate({
   const gateOpen = phase === "permission" || phase === "denied";
 
   return (
-    <div className="relative grid gap-4 lg:grid-cols-[6fr_4fr]">
-      {/* Left: camera + skeleton overlay (60%) */}
+    <div className="relative mx-auto max-w-xl space-y-4">
+      {/* Camera + skeleton overlay */}
       <Card className="overflow-hidden p-0">
         <div className="relative aspect-video w-full bg-black">
           <video
@@ -166,121 +164,33 @@ export function CameraTranslate({
         </div>
       </Card>
 
-      {/* Right: real-time recognition (40%) */}
-      <Card className="flex flex-col gap-4 p-4 sm:p-5">
-        {status === "ready" && (
-          <p className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
-            <span className="size-2 animate-pulse rounded-full bg-primary" aria-hidden />
-            {t("live")}
-          </p>
-        )}
-        {status === "loading" && (
-          <p className="text-sm text-muted-foreground">{t("modelLoading")}</p>
-        )}
-        {status === "error" && (
-          <p className="text-sm text-destructive">{t("modelError")}</p>
-        )}
+      {status === "loading" && (
+        <p className="text-sm text-muted-foreground">{t("modelLoading")}</p>
+      )}
+      {status === "error" && <p className="text-sm text-destructive">{t("modelError")}</p>}
 
-        <div className="rounded-xl border-2 border-primary/30 bg-primary/5 p-4">
-          <p className="text-xs font-medium text-muted-foreground">{t("recognized")}</p>
-          {liveTop ? (
-            <>
-              <div className="flex items-baseline justify-between gap-2">
-                <span className="min-w-0 break-words text-2xl font-extrabold sm:text-3xl">{liveTop.text}</span>
-                <span className="shrink-0 text-sm tabular-nums text-muted-foreground">
-                  {Math.round(liveTop.confidence * 100)}%
-                </span>
-              </div>
-              {liveSecond && (
-                <button
-                  type="button"
-                  onClick={() => say(liveSecond.text)}
-                  className="mt-2 flex w-full items-center justify-between gap-2 rounded-lg border px-3 py-1.5 text-left text-sm hover:bg-accent"
-                >
-                  <span className="text-muted-foreground">
-                    {t("alternative")}:{" "}
-                    <span className="font-semibold text-foreground">{liveSecond.text}</span>
-                  </span>
-                  <Icons.playAudio className="size-4 text-muted-foreground" aria-hidden />
-                </button>
-              )}
-            </>
-          ) : (
-            <p className="mt-1 text-sm text-muted-foreground">{t("raiseHand")}</p>
-          )}
-        </div>
-
-        {/* Composed sentence suggestions */}
-        {suggestions.length > 0 && (
-          <div>
-            <p className="mb-1 text-xs font-medium text-muted-foreground">{t("suggested")}</p>
-            <div className="space-y-1.5">
-              {suggestions.map((s, i) => {
-                const active = i === selectedIdx;
-                return (
-                  <button
-                    key={`${s.text}-${i}`}
-                    type="button"
-                    onClick={() => setSelectedIdx(i)}
-                    aria-pressed={active}
-                    className={cn(
-                      "w-full rounded-lg border-2 p-3 text-left text-base font-semibold transition-colors sm:text-lg",
-                      active ? "border-primary bg-primary/5" : "border-border hover:border-primary/40"
-                    )}
-                  >
-                    {s.text}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* Recognized words (editable / correctable) */}
-        <div>
-          <p className="mb-1 text-xs font-medium text-muted-foreground">{t("words")}</p>
-          <div className="min-h-12 rounded-lg bg-secondary/60 p-3">
-            <EditableSentence words={sentence} onChange={setSentence} suggestions={vocab} />
-          </div>
-        </div>
-
-        <FaceAnalyticsBar signals={face} />
-
-        <div className="mt-auto grid gap-2 sm:grid-cols-2">
-          <Button
-            variant="outline"
-            onClick={() => say(chosenText)}
-            disabled={!chosenText}
-          >
-            <Icons.playAudio className="size-5" aria-hidden />
-            {t("play")}
-          </Button>
-          <Button onClick={saveSentence} disabled={sentence.length === 0}>
-            <Icons.confirm className="size-5" aria-hidden />
-            {t("save")}
-          </Button>
-          <Button variant="ghost" onClick={clearSentence} disabled={sentence.length === 0}>
-            {t("clear")}
-          </Button>
-          <Button
-            variant="ghost"
-            onClick={() => {
-              stopStream();
-              onClose();
-            }}
-          >
-            <Icons.close className="size-5" aria-hidden />
-            {t("stop")}
-          </Button>
-        </div>
-
-        {saved && (
-          <p role="status" className="inline-flex items-center gap-1.5 text-sm font-medium text-primary">
-            <Icons.confirm className="size-4" aria-hidden />
-            {t("saved")}
-          </p>
-        )}
-      </Card>
+      <RecognitionPanel
+        liveTop={liveTop}
+        liveSecond={liveSecond}
+        onPlayAlternative={say}
+        suggestions={suggestions}
+        selectedIdx={selectedIdx}
+        onSelectSuggestion={setSelectedIdx}
+        words={sentence}
+        onWordsChange={setSentence}
+        vocab={vocab}
+        face={face}
+        onPlay={() => say(chosenText)}
+        onSave={saveSentence}
+        onClear={clearSentence}
+        onStop={() => {
+          stopStream();
+          onClose();
+        }}
+        saved={saved}
+        canSave={sentence.length > 0}
+        canPlay={Boolean(chosenText)}
+      />
 
       {/* Permission gate overlay: camera never opens without explicit confirm */}
       {gateOpen && (

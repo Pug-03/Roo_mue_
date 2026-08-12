@@ -9,6 +9,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { A11yProvider } from "@/components/accessibility/a11y-provider";
 import { A11yMenu } from "@/components/accessibility/a11y-menu";
+import { Icons } from "@/components/icons";
 
 export default async function AppLayout({
   children,
@@ -19,6 +20,8 @@ export default async function AppLayout({
   if (!session) redirect("/login");
 
   const t = await getTranslations("app");
+
+  const displayName = session.user.name ?? t("greeting");
 
   return (
     <A11yProvider>
@@ -31,11 +34,14 @@ export default async function AppLayout({
         </a>
         <header className="border-b bg-background">
           <div className="container flex min-h-16 items-center justify-between gap-3 py-3">
-            <Link
-              href="/app"
-              className="min-w-0 text-lg font-extrabold tracking-tight sm:text-xl"
-            >
-              Roo_mue
+            <Link href="/app" className="flex min-w-0 items-center gap-2.5">
+              <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground">
+                <Icons.hand className="size-5" aria-hidden />
+              </span>
+              <span className="min-w-0 leading-tight">
+                <span className="block text-base font-extrabold tracking-tight">Roo_mue</span>
+                <span className="block truncate text-xs text-muted-foreground">{displayName}</span>
+              </span>
             </Link>
             <div className="flex shrink-0 items-center gap-2 sm:gap-3">
               <A11yMenu />
@@ -44,13 +50,11 @@ export default async function AppLayout({
               <SignOutButton label={t("signOut")} />
             </div>
           </div>
-          <div className="pb-3 sm:container">
-            <AppNav />
-          </div>
         </header>
-        <main id="main-content" className="container flex-1 py-5 sm:py-8">
+        <main id="main-content" className="container flex-1 py-5 pb-28 sm:py-8 sm:pb-28">
           {children}
         </main>
+        <AppNav />
       </div>
     </A11yProvider>
   );

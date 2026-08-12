@@ -13,6 +13,7 @@
     "home": "Home",
     "call": "Family call",
     "history": "History",
+    "signs": "Signs",
     "profile": "Profile",
     "login": "Log in",
     "register": "Sign up"
@@ -31,6 +32,10 @@
     "notSupported": "Voice commands aren't supported on this device"
   },
   "auth": {
+    "tabs": {
+      "register": "Sign up",
+      "login": "Log in"
+    },
     "login": {
       "title": "Log in",
       "subtitle": "Welcome back",
@@ -122,7 +127,19 @@
       "emergencyTitle": "Emergency",
       "emergencyDesc": "Fast mode for crises",
       "everydayTitle": "Everyday situation",
-      "everydayDesc": "Day-to-day communication"
+      "everydayDesc": "Day-to-day communication",
+      "alphabetTitle": "Fingerspelling (A–Z)",
+      "alphabetDesc": "Spell English letters with ASL hand signs"
+    },
+    "dashboard": {
+      "searchPlaceholder": "Search for who to call",
+      "historyTitle": "History",
+      "historyEmpty": "No translation history yet",
+      "seeAll": "See all",
+      "categoriesTitle": "Categories"
+    },
+    "signs": {
+      "title": "Sign language"
     },
     "emergency": {
       "submenuTitle": "Choose how to communicate",
@@ -154,6 +171,8 @@
         "restaurant": "Restaurant",
         "transport": "Public transport",
         "school": "School",
+        "police": "Police station",
+        "home": "Home",
         "other": "Other"
       }
     },
@@ -262,10 +281,62 @@
       "unmuteMic": "Unmute mic",
       "endCall": "End call",
       "play": "Read aloud",
-      "back": "Back"
+      "back": "Back",
+      "sendMessage": "Send message"
+    },
+    "contacts": {
+      "title": "Family call",
+      "add": "Add",
+      "empty": "No contacts yet — add one by phone number",
+      "addTitle": "Add a contact",
+      "search": "Search",
+      "invalidPhone": "Enter a valid phone number",
+      "notFound": "No Roo_mue account found for this number",
+      "isSelf": "That's your own number",
+      "added": "Added",
+      "addAction": "Add",
+      "close": "Close"
+    },
+    "chat": {
+      "back": "Back",
+      "empty": "No messages yet",
+      "placeholder": "Send a message…",
+      "send": "Send",
+      "incomingCall": "{name} is calling — tap to join"
+    },
+    "alphabet": {
+      "permissionTitle": "Allow camera access?",
+      "permissionBody": "This mode sends captured frames to this app's own server for recognition (not to a third party). Nothing is stored.",
+      "allow": "Allow",
+      "cancel": "Cancel",
+      "starting": "Starting camera…",
+      "denied": "Could not access the camera. Please allow it in your browser and try again.",
+      "insecure": "The camera only works over https or on localhost.",
+      "retry": "Try again",
+      "modelLoading": "Warming up the recognition model…",
+      "modelError": "Could not reach the recognition model. Check your connection and try again.",
+      "frameHint": "Keep your hand inside the box",
+      "live": "Recognizing letters in real time",
+      "recognized": "Letter",
+      "raiseHand": "Show a hand sign in the box to begin",
+      "spelled": "Spelled word",
+      "empty": "Letters you sign will appear here",
+      "space": "Space",
+      "backspace": "Delete",
+      "play": "Read aloud",
+      "save": "Save word",
+      "saved": "Saved to history",
+      "clear": "Clear",
+      "stop": "Stop camera"
     }
   },
   "landing": {
+    "welcome": {
+      "greeting": "Welcome to",
+      "tagline": "An app for people with hearing disabilities",
+      "cta": "Sign up",
+      "haveAccount": "I already have an account"
+    },
     "tagline": "Communicate faster, in the moment that matters",
     "headlineLine1": "Translate sign language",
     "headlineLine2": "into Thai instantly",

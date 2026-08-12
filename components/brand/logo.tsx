@@ -44,6 +44,7 @@ export function Logo({
   showWordmark = true,
   showThai = true,
   gradient = false,
+  light = false,
   name = "Roo_mue",
   className,
 }: {
@@ -51,6 +52,8 @@ export function Logo({
   showWordmark?: boolean;
   showThai?: boolean;
   gradient?: boolean;
+  /** White wordmark, for use on the deep-blue gradient screens. */
+  light?: boolean;
   name?: string;
   className?: string;
 }) {
@@ -65,13 +68,20 @@ export function Logo({
               wordSizes[size],
               gradient
                 ? "bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent"
-                : "text-foreground"
+                : light
+                  ? "text-white"
+                  : "text-foreground"
             )}
           >
             {name}
           </span>
           {showThai && (
-            <span className="mt-1 truncate text-[0.7em] font-medium text-muted-foreground">
+            <span
+              className={cn(
+                "mt-1 truncate text-[0.7em] font-medium",
+                light ? "text-white/70" : "text-muted-foreground"
+              )}
+            >
               รู้มือ · Thai Sign Language
             </span>
           )}

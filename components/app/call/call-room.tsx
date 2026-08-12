@@ -19,12 +19,16 @@ export function CallRoom({
   role,
   stream,
   onEnd,
+  onSendMessage,
 }: {
   room: string;
   peerId: string;
   role: CallRole;
   stream: MediaStream;
   onEnd: () => void;
+  /** Pushes the local participant's current sign/speech transcript into the
+   * persistent chat thread with this contact. Omit to hide the button. */
+  onSendMessage?: (text: string) => void;
 }) {
   const t = useTranslations("app.call");
   const locale = useLocale() as "th" | "en";
@@ -88,6 +92,7 @@ export function CallRoom({
           incoming={incoming}
           sent={sent}
           remoteStream={remoteStream}
+          onSendMessage={onSendMessage}
         />
       ) : (
         <SpeakerView
@@ -100,6 +105,8 @@ export function CallRoom({
           }}
           incoming={incoming}
           onPlayIncoming={() => incoming && say(incoming.text)}
+          sent={sent}
+          onSendMessage={onSendMessage}
         />
       )}
 
@@ -149,12 +156,14 @@ function SignerView({
   incoming,
   sent,
   remoteStream,
+  onSendMessage,
 }: {
   stream: MediaStream;
   onCommit: (word: string) => void;
   incoming: { text: string; interim: boolean } | null;
   sent: string[];
   remoteStream: MediaStream | null;
+  onSendMessage?: (text: string) => void;
 }) {
   const t = useTranslations("app.call");
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -177,7 +186,7 @@ function SignerView({
   });
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[6fr_4fr]">
+    <div className="mx-auto max-w-xl space-y-4">
       <Card className="overflow-hidden p-0">
         <div className="relative aspect-video w-full bg-black">
           <video
@@ -196,9 +205,9 @@ function SignerView({
         </div>
       </Card>
 
-      <Card className="flex flex-col gap-4 p-4 sm:p-5">
-        <VideoTile stream={remoteStream} label={t("speaker")} />
+      <VideoTile stream={remoteStream} label={t("speaker")} />
 
+      <Card className="flex flex-col gap-4 p-4 sm:p-5">
         {/* Father's speech, large, for the child to read */}
         <div className="rounded-xl border-2 border-primary/30 bg-primary/5 p-4">
           <p className="text-xs font-medium text-muted-foreground">{t("theirSpeech")}</p>
@@ -215,6 +224,17 @@ function SignerView({
             {sent.length ? sent.join(" ") : "—"}
           </div>
         </div>
+
+        {/* Pushes the current sentence into the persistent chat thread with
+            this contact. */}
+        <Button
+          variant="secondary"
+          onClick={() => onSendMessage?.(sent.join(" "))}
+          disabled={!onSendMessage || sent.length === 0}
+        >
+          <Icons.chat className="size-5" aria-hidden />
+          {t("sendMessage")}
+        </Button>
       </Card>
     </div>
   );
@@ -229,6 +249,8 @@ function SpeakerView({
   onSpeech,
   incoming,
   onPlayIncoming,
+  sent,
+  onSendMessage,
 }: {
   localStream: MediaStream;
   remoteStream: MediaStream | null;
@@ -236,6 +258,8 @@ function SpeakerView({
   onSpeech: (text: string, isFinal: boolean) => void;
   incoming: { text: string; interim: boolean } | null;
   onPlayIncoming: () => void;
+  sent: string[];
+  onSendMessage?: (text: string) => void;
 }) {
   const t = useTranslations("app.call");
   const { supported } = useSpeechRecognition({
@@ -245,11 +269,9 @@ function SpeakerView({
   });
 
   return (
-    <div className="space-y-4">
-      <div className="grid gap-4 lg:grid-cols-[6fr_4fr]">
-        <VideoTile stream={remoteStream} label={t("signer")} />
-        <VideoTile stream={localStream} label={t("speaker")} muted mirror />
-      </div>
+    <div className="mx-auto max-w-xl space-y-4">
+      <VideoTile stream={remoteStream} label={t("signer")} />
+      <VideoTile stream={localStream} label={t("speaker")} muted mirror />
 
       {/* Child's signs, large, read aloud automatically */}
       <Card className="border-2 border-primary/30 bg-primary/5 p-4 sm:p-6">
@@ -278,6 +300,18 @@ function SpeakerView({
           </p>
         )}
       </Card>
+
+      {/* Pushes the current sentence into the persistent chat thread with
+          this contact. */}
+      <Button
+        variant="secondary"
+        className="w-full"
+        onClick={() => onSendMessage?.(sent.join(" "))}
+        disabled={!onSendMessage || sent.length === 0}
+      >
+        <Icons.chat className="size-5" aria-hidden />
+        {t("sendMessage")}
+      </Button>
     </div>
   );
 }

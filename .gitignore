@@ -40,3 +40,6 @@ dev_err.log
 
 # large local docs (not source)
 /Presentation*.pdf
+
+# server-side model weights (too large for git; regenerate via scripts/)
+/models/

@@ -12,15 +12,15 @@ export default async function AuthLayout({
   const t = await getTranslations("common");
 
   return (
-    <div className="relative flex min-h-dvh flex-col">
-      <SignBackdrop />
+    <div className="bg-brand-gradient relative flex min-h-dvh flex-col">
+      <SignBackdrop tone="white" />
       <header className="w-full">
         <div className="container flex min-h-16 items-center justify-between gap-3 py-3">
           <Link
             href="/"
             className="rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            <Logo size="sm" showThai={false} name={t("appName")} />
+            <Logo size="sm" showThai={false} light name={t("appName")} />
           </Link>
           <LanguageToggle />
         </div>

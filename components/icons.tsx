@@ -26,21 +26,29 @@ import {
   Copy,
   Eye,
   EyeOff,
+  Frown,
   GraduationCap,
   Hand,
   HeartPulse,
   History,
+  Home,
+  Image as ImageIcon,
   Languages,
   ListChecks,
   MapPin,
+  Meh,
+  MessageCircle,
   MessageSquareText,
   Mic,
   MicOff,
   Moon,
   MoreHorizontal,
+  Paperclip,
   Pencil,
   PhoneCall,
   PhoneOff,
+  Search,
+  Send,
   Settings,
   ShieldAlert,
   ShoppingCart,
@@ -50,6 +58,7 @@ import {
   Sun,
   Type,
   User,
+  UserPlus,
   Users,
   UtensilsCrossed,
   Volume2,
@@ -78,6 +87,7 @@ export const Icons = {
   restaurant: UtensilsCrossed,
   transport: Bus,
   school: GraduationCap,
+  home: Home,
   other: MoreHorizontal,
 
   // Emergency helpers
@@ -97,6 +107,11 @@ export const Icons = {
   mouth: Speech,
   pain2: HeartPulse,
 
+  // Confidence-meter scale (low -> high)
+  confidenceLow: Frown,
+  confidenceMid: Meh,
+  confidenceHigh: Smile,
+
   // Chrome
   language: Languages,
   profile: User,
@@ -109,7 +124,7 @@ export const Icons = {
   contrast: Contrast,
   textSize: Type,
 
-  // Family call
+  // Family call / contacts / chat
   call: PhoneCall,
   endCall: PhoneOff,
   micOn: Mic,
@@ -117,6 +132,14 @@ export const Icons = {
   copy: Copy,
   users: Users,
   hand: Hand,
+  addContact: UserPlus,
+  chat: MessageCircle,
+  send: Send,
+  attachImage: ImageIcon,
+  attachFile: Paperclip,
+
+  // Search
+  search: Search,
 
   // Landing feature grid
   featureCamera: Camera,

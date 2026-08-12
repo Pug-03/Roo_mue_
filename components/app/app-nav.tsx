@@ -8,27 +8,29 @@ import { cn } from "@/lib/utils";
 
 type Tab = {
   href: string;
-  key: "home" | "call" | "history" | "profile";
+  key: "home" | "history" | "signs" | "call" | "profile";
   Icon: LucideIcon;
 };
 
 const TABS: Tab[] = [
   { href: "/app", key: "home", Icon: Icons.camera },
-  { href: "/app/call", key: "call", Icon: Icons.call },
   { href: "/app/history", key: "history", Icon: Icons.history },
+  { href: "/app/signs", key: "signs", Icon: Icons.hand },
+  { href: "/app/call", key: "call", Icon: Icons.call },
   { href: "/app/profile", key: "profile", Icon: Icons.profile },
 ];
 
+/** Floating rounded bottom navigation bar. */
 export function AppNav() {
   const t = useTranslations("nav");
   const pathname = usePathname();
 
   return (
     <nav
-      className="overflow-x-auto px-4 [-ms-overflow-style:none] [scrollbar-width:none] sm:flex sm:justify-center sm:px-0 [&::-webkit-scrollbar]:hidden"
+      className="bg-brand-gradient fixed inset-x-4 bottom-4 z-30 mx-auto max-w-sm rounded-full p-1.5 shadow-lg sm:inset-x-0"
       aria-label="Primary"
     >
-      <div className="inline-flex min-w-max items-center gap-1 rounded-full border bg-card p-1">
+      <div className="flex items-center justify-around">
         {TABS.map(({ href, key, Icon }) => {
           const active = href === "/app" ? pathname === "/app" : pathname.startsWith(href);
           return (
@@ -36,15 +38,13 @@ export function AppNav() {
               key={href}
               href={href}
               aria-current={active ? "page" : undefined}
+              aria-label={t(key)}
               className={cn(
-                "inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 text-sm font-semibold transition-colors sm:gap-2 sm:px-5",
-                active
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                "grid size-11 place-items-center rounded-full transition-colors sm:size-12",
+                active ? "bg-white text-primary" : "text-white/75 hover:text-white"
               )}
             >
-              <Icon className="size-4" aria-hidden />
-              {t(key)}
+              <Icon className="size-5" aria-hidden />
             </Link>
           );
         })}

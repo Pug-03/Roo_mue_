@@ -37,6 +37,12 @@ model User {
   sessions            Session[]
   translationSessions TranslationSession[]
 
+  contactsOwned  Contact[]      @relation("ContactOwner")
+  contactedBy    Contact[]      @relation("ContactTarget")
+  conversationsA Conversation[] @relation("ConversationA")
+  conversationsB Conversation[] @relation("ConversationB")
+  chatMessages   ChatMessage[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -103,4 +109,63 @@ model TranslationSession {
   createdAt DateTime @default(now())
 
   @@index([userId, createdAt])
+}
+
+// ---- Family Call: contacts + chat ------------------------------------------
+
+// Directed address-book entry — saving someone doesn't require them to save
+// you back, and does NOT itself gate messaging/calling (see Conversation).
+model Contact {
+  id String @id @default(cuid())
+
+  ownerId String
+  owner   User   @relation("ContactOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  contactUserId String
+  contactUser   User   @relation("ContactTarget", fields: [contactUserId], references: [id], onDelete: Cascade)
+
+  // Optional display override, e.g. "Dad" instead of the contact's real name.
+  label String?
+
+  createdAt DateTime @default(now())
+
+  @@unique([ownerId, contactUserId])
+  @@index([contactUserId])
+}
+
+// One 1:1 thread between two users. Always created via getOrCreateConversation,
+// which sorts the pair (userAId < userBId) before upsert — this is what makes
+// the unique constraint dedupe a pair regardless of who initiates.
+model Conversation {
+  id String @id @default(cuid())
+
+  userAId String
+  userA   User   @relation("ConversationA", fields: [userAId], references: [id], onDelete: Cascade)
+  userBId String
+  userB   User   @relation("ConversationB", fields: [userBId], references: [id], onDelete: Cascade)
+
+  messages ChatMessage[]
+
+  createdAt DateTime @default(now())
+  // Bumped on every new message; doubles as the "last activity" timestamp
+  // for the contacts list — no denormalized counter needed.
+  updatedAt DateTime @updatedAt
+
+  @@unique([userAId, userBId])
+  @@index([userBId])
+}
+
+model ChatMessage {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  body String
+
+  createdAt DateTime  @default(now())
+  readAt    DateTime?
+
+  @@index([conversationId, createdAt])
 }

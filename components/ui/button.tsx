@@ -16,6 +16,9 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        // White button for use directly on the deep-blue gradient screens
+        // (welcome, auth, family-call) — `default` would blend into the bg.
+        onBrand: "bg-white text-primary hover:bg-white/90",
       },
       size: {
         // Large tap targets per WCAG 2.1 AA (>= 44px height)
@@ -24,10 +27,15 @@ const buttonVariants = cva(
         lg: "h-14 rounded-lg px-8 text-lg",
         icon: "h-12 w-12",
       },
+      shape: {
+        default: "",
+        pill: "rounded-full",
+      },
     },
     defaultVariants: {
       variant: "default",
       size: "default",
+      shape: "default",
     },
   }
 );
@@ -37,11 +45,11 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {}
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, type, ...props }, ref) => {
+  ({ className, variant, size, shape, type, ...props }, ref) => {
     return (
       <button
         type={type ?? "button"}
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(buttonVariants({ variant, size, shape, className }))}
         ref={ref}
         {...props}
       />

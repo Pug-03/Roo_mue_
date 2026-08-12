@@ -9,12 +9,14 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PillTabs } from "@/components/ui/pill-tabs";
 import { GoogleButton } from "./google-button";
 import { Icons } from "@/components/icons";
 import { BrandMark } from "@/components/brand/logo";
 
 export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
   const t = useTranslations("auth.login");
+  const tTabs = useTranslations("auth.tabs");
   const router = useRouter();
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
@@ -39,49 +41,59 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
   }
 
   return (
-    <Card className="w-full max-w-[420px] border-white/60 bg-card/95 p-5 shadow-xl backdrop-blur-sm sm:p-8 dark:border-white/10">
-      <div className="mb-5 text-center sm:mb-6">
-        <BrandMark className="mx-auto size-14" />
-        <h1 className="mt-4 text-2xl font-extrabold">{t("title")}</h1>
-        <p className="mt-1 text-sm text-muted-foreground">{t("subtitle")}</p>
-      </div>
-
-      <form onSubmit={onSubmit} className="space-y-4">
-        <div className="space-y-1.5">
-          <Label htmlFor="phone">{t("phone")}</Label>
-          <Input
-            id="phone"
-            type="tel"
-            inputMode="tel"
-            autoComplete="tel"
-            placeholder="081-234-5678"
-            required
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-        </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="password">{t("password")}</Label>
-          <Input
-            id="password"
-            type="password"
-            autoComplete="current-password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+    <div className="w-full max-w-[420px] space-y-4">
+      <PillTabs
+        activeKey="login"
+        options={[
+          { key: "register", label: tTabs("register"), href: "/register" },
+          { key: "login", label: tTabs("login") },
+        ]}
+      />
+      <Card className="border-white/60 bg-card/95 p-5 shadow-xl backdrop-blur-sm sm:p-8 dark:border-white/10">
+        <div className="mb-5 text-center sm:mb-6">
+          <BrandMark className="mx-auto size-14" />
+          <h1 className="mt-4 text-2xl font-extrabold">{t("title")}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">{t("subtitle")}</p>
         </div>
 
-        {error && (
-          <p role="alert" className="text-sm font-medium text-destructive">
-            {error}
-          </p>
-        )}
+        <form onSubmit={onSubmit} className="space-y-5">
+          <div className="space-y-1.5">
+            <Label htmlFor="phone">{t("phone")}</Label>
+            <Input
+              id="phone"
+              variant="underline"
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel"
+              placeholder="081-234-5678"
+              required
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="password">{t("password")}</Label>
+            <Input
+              id="password"
+              variant="underline"
+              type="password"
+              autoComplete="current-password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
 
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? "..." : t("submit")}
-        </Button>
-      </form>
+          {error && (
+            <p role="alert" className="text-sm font-medium text-destructive">
+              {error}
+            </p>
+          )}
+
+          <Button shape="pill" type="submit" className="w-full" disabled={loading}>
+            {loading ? "..." : t("submit")}
+          </Button>
+        </form>
 
       {googleEnabled && (
         <>
@@ -106,6 +118,7 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
           <Icons.next className="size-4" aria-hidden />
         </Link>
       </div>
-    </Card>
+      </Card>
+    </div>
   );
 }

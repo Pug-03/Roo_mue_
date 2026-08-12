@@ -36,7 +36,14 @@ const HANDS: Placed[] = [
   { Icon: HandMetal, left: "85%", top: "44%", size: 92, rotate: 12, opacity: 0.1, duration: 20, delay: 4 },
 ];
 
-export function SignBackdrop({ className }: { className?: string }) {
+export function SignBackdrop({
+  className,
+  tone = "primary",
+}: {
+  className?: string;
+  /** "primary" for light backgrounds, "white" for the deep-blue gradient screens. */
+  tone?: "primary" | "white";
+}) {
   return (
     <div
       aria-hidden
@@ -47,7 +54,12 @@ export function SignBackdrop({ className }: { className?: string }) {
     >
       {/* Hands only — clustered near the top, masked to fade before the content
           below, slowly drifting. No color wash so logos stay on clean white. */}
-      <div className="absolute inset-x-0 top-0 h-[85vh] text-primary [mask-image:radial-gradient(125%_100%_at_50%_16%,black,transparent_72%)]">
+      <div
+        className={cn(
+          "absolute inset-x-0 top-0 h-[85vh] [mask-image:radial-gradient(125%_100%_at_50%_16%,black,transparent_72%)]",
+          tone === "white" ? "text-white" : "text-primary"
+        )}
+      >
         {HANDS.map(({ Icon, left, top, size, rotate, opacity, duration, delay }, i) => (
           <span
             key={i}

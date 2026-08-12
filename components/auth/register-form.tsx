@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PillTabs } from "@/components/ui/pill-tabs";
 import { GoogleButton } from "./google-button";
 import { OtpInput } from "./otp-input";
 import { StepDots } from "./step-dots";
@@ -33,6 +34,7 @@ function formatNationalId(digits: string): string {
 
 export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
   const t = useTranslations("auth.register");
+  const tTabs = useTranslations("auth.tabs");
   const router = useRouter();
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -144,7 +146,17 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
   }
 
   return (
-    <Card className="w-full max-w-[440px] border-white/60 bg-card/95 p-5 shadow-xl backdrop-blur-sm sm:p-8 dark:border-white/10">
+    <div className="w-full max-w-[440px] space-y-4">
+      {step === 1 && (
+        <PillTabs
+          activeKey="register"
+          options={[
+            { key: "register", label: tTabs("register") },
+            { key: "login", label: tTabs("login"), href: "/login" },
+          ]}
+        />
+      )}
+      <Card className="border-white/60 bg-card/95 p-5 shadow-xl backdrop-blur-sm sm:p-8 dark:border-white/10">
       <div className="mb-5 text-center sm:mb-6">
         <BrandMark className="mx-auto mb-4 size-14" />
         <h1 className="text-2xl font-extrabold">{t("title")}</h1>
@@ -163,6 +175,7 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
           <div className="space-y-1.5">
             <Label htmlFor="phone">{t("step1.phoneLabel")}</Label>
             <Input
+              variant="underline"
               id="phone"
               type="tel"
               inputMode="tel"
@@ -175,7 +188,7 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
             />
           </div>
           {error && <FieldError>{error}</FieldError>}
-          <Button className="w-full" onClick={goStep1ToStep2}>
+          <Button shape="pill" className="w-full" onClick={goStep1ToStep2}>
             {t("step1.next")}
             <Icons.next className="size-5" aria-hidden />
           </Button>
@@ -192,6 +205,7 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
             <div className="space-y-1.5">
               <Label htmlFor="firstName">{t("step2.firstName")}</Label>
               <Input
+                variant="underline"
                 id="firstName"
                 required
                 value={firstName}
@@ -201,6 +215,7 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
             <div className="space-y-1.5">
               <Label htmlFor="lastName">{t("step2.lastName")}</Label>
               <Input
+                variant="underline"
                 id="lastName"
                 required
                 value={lastName}
@@ -211,6 +226,7 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
           <div className="space-y-1.5">
             <Label htmlFor="nationalId">{t("step2.nationalId")}</Label>
             <Input
+              variant="underline"
               id="nationalId"
               inputMode="numeric"
               placeholder="X-XXXX-XXXXX-XX-X"
@@ -228,6 +244,7 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
               </span>
             </Label>
             <Input
+              variant="underline"
               id="disabilityCard"
               value={disabilityCardNo}
               onChange={(e) => setDisabilityCardNo(e.target.value)}
@@ -236,6 +253,7 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
           <div className="space-y-1.5">
             <Label htmlFor="password">{t("step2.password")}</Label>
             <Input
+              variant="underline"
               id="password"
               type="password"
               autoComplete="new-password"
@@ -246,11 +264,11 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
           </div>
           {error && <FieldError>{error}</FieldError>}
           <div className="grid gap-3 sm:grid-cols-2">
-            <Button variant="outline" className="flex-1" onClick={() => setStep(1)}>
+            <Button shape="pill" variant="outline" className="flex-1" onClick={() => setStep(1)}>
               <Icons.back className="size-5" aria-hidden />
               {t("step2.back")}
             </Button>
-            <Button className="flex-1" onClick={goStep2ToStep3} disabled={loading}>
+            <Button shape="pill" className="flex-1" onClick={goStep2ToStep3} disabled={loading}>
               {loading ? "..." : t("step2.next")}
               <Icons.next className="size-5" aria-hidden />
             </Button>
@@ -297,7 +315,7 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <Button variant="outline" className="flex-1" onClick={() => setStep(2)}>
+            <Button shape="pill" variant="outline" className="flex-1" onClick={() => setStep(2)}>
               <Icons.back className="size-5" aria-hidden />
               {t("step3.back")}
             </Button>
@@ -322,7 +340,8 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
           <Icons.next className="size-4" aria-hidden />
         </Link>
       </div>
-    </Card>
+      </Card>
+    </div>
   );
 }
 

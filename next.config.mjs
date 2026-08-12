@@ -18,6 +18,13 @@ const securityHeaders = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Native addons (ONNX Runtime's .node binding, sharp's libvips) can't be
+  // parsed by webpack — load them via Node's real require at runtime instead
+  // of bundling, otherwise the build chokes trying to parse binary files for
+  // every platform target inside onnxruntime-node's bin/ directory.
+  experimental: {
+    serverComponentsExternalPackages: ["onnxruntime-node", "sharp"],
+  },
   async headers() {
     return [
       {

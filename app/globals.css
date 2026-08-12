@@ -31,6 +31,10 @@
     --ring: 221 83% 53%;
 
     --radius: 0.75rem;
+
+    /* Deep-blue gradient used on full-bleed screens (welcome, auth, calls) */
+    --brand-gradient-from: 226 71% 24%;
+    --brand-gradient-to: 221 83% 53%;
   }
 
   .dark {
@@ -58,6 +62,9 @@
     --border: 217 33% 22%;
     --input: 217 33% 24%;
     --ring: 217 91% 60%;
+
+    --brand-gradient-from: 224 64% 14%;
+    --brand-gradient-to: 221 70% 38%;
   }
 }
 
@@ -130,9 +137,24 @@
   .a11y-high-contrast body {
     background-image: none;
   }
+  /* Same guarantee for the full-bleed brand-gradient screens (welcome, auth,
+     calls): high contrast always wins over decorative color. */
+  .a11y-high-contrast .bg-brand-gradient {
+    background: hsl(var(--background));
+  }
 }
 
 @layer utilities {
+  /* Full-bleed deep-blue screen background (welcome, auth, family-call).
+     Diagonal wash from the brand tokens so it adapts to light/dark. */
+  .bg-brand-gradient {
+    background: linear-gradient(
+      155deg,
+      hsl(var(--brand-gradient-from)),
+      hsl(var(--brand-gradient-to))
+    );
+  }
+
   /* Light-mode logo cleanup: drop white box backgrounds */
   .logo-multiply {
     mix-blend-mode: multiply;

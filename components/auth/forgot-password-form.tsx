@@ -100,6 +100,7 @@ export function ForgotPasswordForm() {
             <Label htmlFor="phone">{t("phone")}</Label>
             <Input
               id="phone"
+              variant="underline"
               type="tel"
               inputMode="tel"
               autoComplete="tel"
@@ -111,7 +112,7 @@ export function ForgotPasswordForm() {
             />
           </div>
           {error && <FieldError>{error}</FieldError>}
-          <Button className="w-full" onClick={sendCode} disabled={loading}>
+          <Button shape="pill" className="w-full" onClick={sendCode} disabled={loading}>
             {loading ? "..." : t("send")}
             <Icons.next className="size-5" aria-hidden />
           </Button>
@@ -139,6 +140,7 @@ export function ForgotPasswordForm() {
             <Label htmlFor="newPassword">{t("newPassword")}</Label>
             <Input
               id="newPassword"
+              variant="underline"
               type="password"
               autoComplete="new-password"
               value={password}
@@ -166,11 +168,12 @@ export function ForgotPasswordForm() {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <Button variant="outline" className="flex-1" onClick={() => setStep(1)}>
+            <Button shape="pill" variant="outline" className="flex-1" onClick={() => setStep(1)}>
               <Icons.back className="size-5" aria-hidden />
               {t("back")}
             </Button>
             <Button
+              shape="pill"
               className="flex-1"
               onClick={reset}
               disabled={loading || otp.length !== 6}
@@ -188,7 +191,7 @@ export function ForgotPasswordForm() {
             <Icons.confirm className="size-7" aria-hidden />
           </span>
           <p className="font-semibold">{t("success")}</p>
-          <Button className="w-full" onClick={() => router.push("/login")}>
+          <Button shape="pill" className="w-full" onClick={() => router.push("/login")}>
             {t("backToLogin")}
           </Button>
         </div>
