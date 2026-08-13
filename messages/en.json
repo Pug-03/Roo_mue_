@@ -245,7 +245,8 @@
       "phone": "Phone number",
       "nationalId": "National ID",
       "disabilityCard": "Disability card number",
-      "none": "-"
+      "none": "-",
+      "language": "Language"
     },
     "call": {
       "title": "Family call",

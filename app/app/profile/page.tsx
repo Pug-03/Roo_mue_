@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { Card } from "@/components/ui/card";
 import { Icons } from "@/components/icons";
+import { LanguageToggle } from "@/components/language-toggle";
+import { SignOutButton } from "@/components/auth/sign-out-button";
 import { formatPhone } from "@/lib/phone";
 
 export const dynamic = "force-dynamic";
@@ -17,6 +19,7 @@ function maskNationalId(id: string | null): string | null {
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions);
   const t = await getTranslations("app.profile");
+  const tApp = await getTranslations("app");
 
   const user = await prisma.user.findUnique({
     where: { id: session!.user.id },
@@ -52,7 +55,13 @@ export default async function ProfilePage() {
             <span className="font-medium">{r.value}</span>
           </div>
         ))}
+        <div className="flex items-center justify-between gap-4 p-4">
+          <span className="text-sm text-muted-foreground">{t("language")}</span>
+          <LanguageToggle />
+        </div>
       </Card>
+
+      <SignOutButton label={tApp("signOut")} className="mt-4 w-full" />
     </div>
   );
 }

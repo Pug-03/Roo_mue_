@@ -4,9 +4,7 @@ import { getServerSession } from "next-auth";
 import { getTranslations } from "next-intl/server";
 import { authOptions } from "@/lib/auth";
 import { AppNav } from "@/components/app/app-nav";
-import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { SignOutButton } from "@/components/auth/sign-out-button";
 import { A11yProvider } from "@/components/accessibility/a11y-provider";
 import { A11yMenu } from "@/components/accessibility/a11y-menu";
 import { Icons } from "@/components/icons";
@@ -46,8 +44,6 @@ export default async function AppLayout({
             <div className="flex shrink-0 items-center gap-2 sm:gap-3">
               <A11yMenu />
               <ThemeToggle />
-              <LanguageToggle />
-              <SignOutButton label={t("signOut")} />
             </div>
           </div>
         </header>
