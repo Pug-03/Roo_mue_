@@ -1,14 +1,24 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Icons, type LucideIcon } from "@/components/icons";
 import { PresetPhrases } from "./preset-phrases";
 import { BasicSigns } from "./basic-signs";
-import { CameraTranslate } from "./camera-translate";
-import { AlphabetTranslate } from "./alphabet-translate";
+
+// Both pull in the TensorFlow.js/ONNX recognition models — code-split out of
+// the hub's initial bundle since most visits never open camera/alphabet mode.
+const CameraTranslate = dynamic(
+  () => import("./camera-translate").then((m) => m.CameraTranslate),
+  { ssr: false, loading: () => <Icons.spinner className="mx-auto my-16 size-6 animate-spin text-primary" aria-hidden /> }
+);
+const AlphabetTranslate = dynamic(
+  () => import("./alphabet-translate").then((m) => m.AlphabetTranslate),
+  { ssr: false, loading: () => <Icons.spinner className="mx-auto my-16 size-6 animate-spin text-primary" aria-hidden /> }
+);
 
 type View =
   | "menu"

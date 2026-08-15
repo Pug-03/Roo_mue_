@@ -6,6 +6,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { normalizePhone } from "@/lib/phone";
 import { broadcast } from "@/lib/call/signaling-store";
+import { rateLimit } from "@/lib/rate-limit";
 
 async function requireUserId(): Promise<string> {
   const session = await getServerSession(authOptions);
@@ -26,13 +27,19 @@ export type FindUserResult =
   | { status: "found"; user: PublicUser; alreadyAdded: boolean }
   | { status: "not_found" }
   | { status: "self" }
-  | { status: "invalid_phone" };
+  | { status: "invalid_phone" }
+  | { status: "rate_limited" };
 
 /** Exact-match phone lookup for "add contact". Returns only display-safe
  * fields — never phone/email/nationalId. Intentionally exact-match only (no
  * partial/fuzzy search) so this can't be used as a general user directory. */
 export async function findUserByPhone(phoneInput: string): Promise<FindUserResult> {
   const userId = await requireUserId();
+  // Caps how many numbers one account can probe — without this, findUserByPhone
+  // would let a logged-in user script a phone-number enumeration scan.
+  if (!rateLimit(`find-user:${userId}`, 20, 10 * 60 * 1000)) {
+    return { status: "rate_limited" };
+  }
   const phone = normalizePhone(phoneInput);
   if (!phone) return { status: "invalid_phone" };
 
@@ -135,6 +142,9 @@ export async function sendMessage(
   const userId = await requireUserId();
   const text = body.trim();
   if (!text) return { ok: false };
+
+  // Generous enough for real conversation, tight enough to block flood-spam.
+  if (!rateLimit(`send-message:${userId}`, 30, 60 * 1000)) return { ok: false };
 
   const conversation = await requireParticipant(conversationId, userId);
   if (!conversation) return { ok: false };

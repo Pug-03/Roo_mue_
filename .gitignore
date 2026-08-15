@@ -39,7 +39,14 @@ dev_err.log
 /.expo/
 
 # large local docs (not source)
-/Presentation*.pdf
+/docs/competition/Presentation*.pdf
 
 # server-side model weights (too large for git; regenerate via scripts/)
 /models/
+
+# pnpm local package store
+/.pnpm-store/
+
+# python bytecode cache
+__pycache__/
+*.pyc

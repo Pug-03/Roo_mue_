@@ -119,6 +119,9 @@ function AddContactDialog({ onClose }: { onClose: () => void }) {
         {result?.status === "self" && (
           <p className="mt-3 text-sm text-muted-foreground">{t("isSelf")}</p>
         )}
+        {result?.status === "rate_limited" && (
+          <p className="mt-3 text-sm text-destructive">{t("rateLimited")}</p>
+        )}
         {result?.status === "found" && (
           <div className="mt-3 flex items-center justify-between gap-3 rounded-lg border p-3">
             <span className="flex items-center gap-2 font-semibold">

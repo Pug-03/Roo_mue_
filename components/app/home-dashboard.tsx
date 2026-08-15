@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { Card } from "@/components/ui/card";
 import { Icons, type LucideIcon } from "@/components/icons";
+import { DashboardBackdrop } from "@/components/brand/dashboard-backdrop";
 import type { HistoryItem } from "./history-list";
 
 export type CategoryKey =
@@ -47,7 +48,9 @@ export function HomeDashboard({
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
+    <div className="relative isolate mx-auto min-h-[calc(100dvh-14rem)] max-w-2xl space-y-6 py-2">
+      <DashboardBackdrop />
+
       <Link
         href="/app/call"
         className="flex h-12 items-center gap-2 rounded-full border bg-card px-4 text-sm text-muted-foreground transition-colors hover:border-primary/40"

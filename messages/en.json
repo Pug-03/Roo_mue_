@@ -294,6 +294,7 @@
       "invalidPhone": "Enter a valid phone number",
       "notFound": "No Roo_mue account found for this number",
       "isSelf": "That's your own number",
+      "rateLimited": "Too many lookups — please wait a bit and try again",
       "added": "Added",
       "addAction": "Add",
       "close": "Close"

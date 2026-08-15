@@ -6,16 +6,14 @@ import { SignBackdrop } from "@/components/brand/sign-backdrop";
 
 /**
  * Full-bleed deep-blue "welcome" screen — the app's entry point, matching the
- * Figma welcome mockup. Replaces the old marketing Hero/FeatureGrid landing;
- * SponsorsSection/FeatureGrid are currently unused dead code, not removed
- * here since deleting unrelated files is out of scope for this change.
+ * Figma welcome mockup. Replaces the old marketing Hero/FeatureGrid landing.
  */
 export async function WelcomeScreen() {
   const t = await getTranslations("landing.welcome");
 
   return (
-    <div className="bg-brand-gradient relative flex min-h-dvh flex-col overflow-hidden text-white">
-      <SignBackdrop tone="white" />
+    <div className="bg-brand-gradient relative isolate flex min-h-dvh flex-col overflow-hidden text-white">
+      <SignBackdrop tone="white" spread="full" motion="bounce" />
 
       <main className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">
         <BrandMark className="size-20 shadow-xl" />

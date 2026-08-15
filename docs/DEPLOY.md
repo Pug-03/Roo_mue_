@@ -2,11 +2,14 @@
 
 This deploys the **web app** to Vercel with a **Neon PostgreSQL** database.
 
-> The Thai sign-language mode works fully (it runs in the browser). The **WLASL
-> ASL-word mode is hidden in production** because it needs a local Python/PyTorch
-> server that can't run on Vercel. To enable it somewhere, host `wlasl-server/`
-> on a machine that can run PyTorch and set `WLASL_SERVER_URL` +
-> `NEXT_PUBLIC_ENABLE_WLASL="true"`.
+> The Thai sign-language mode works fully (it runs in the browser). The ASL
+> fingerspelling (A–Z) mode runs `models/asl-alphabet/model.onnx` (~340MB)
+> server-side via `onnxruntime-node` (`/api/sign-alphabet`) — generate that
+> file locally with `python scripts/export_asl_alphabet.py` (see its
+> docstring). **This is too large for Vercel's serverless function size
+> limit**, so the A–Z mode will not work on a default Vercel deploy; host it
+> on a platform with a larger function/container size limit (or a small VPS)
+> if you need it in production. The Thai-word mode is unaffected either way.
 
 ---
 
@@ -63,9 +66,6 @@ git push origin main
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | for Google sign-in | optional |
 | `SMS_API_KEY` / `SMS_SENDER` | for real OTP SMS on registration | optional |
 
-> Do **not** set `NEXT_PUBLIC_ENABLE_WLASL` on Vercel — leaving it unset hides
-> the WLASL mode (which can't run there).
-
 ## 5. After the first deploy
 
 - Set `NEXTAUTH_URL` to the real URL Vercel gave you, then **redeploy** if you
@@ -76,6 +76,5 @@ git push origin main
 ## Notes
 
 - Every push to `main` triggers an automatic redeploy.
-- The `wlasl-server/` folder is ignored by Vercel (it's a separate Python app).
 - Local dev now also uses Postgres (Neon). The old SQLite `dev.db` is no longer
   used.

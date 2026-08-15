@@ -35,6 +35,7 @@ import {
   Image as ImageIcon,
   Languages,
   ListChecks,
+  Loader2,
   MapPin,
   Meh,
   MessageCircle,
@@ -80,6 +81,7 @@ export const Icons = {
   back: ArrowLeft,
   next: ArrowRight,
   fast: Zap,
+  spinner: Loader2,
 
   // Everyday-context categories
   hospital: Stethoscope,
